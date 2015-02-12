@@ -1,0 +1,7 @@
+Reglas generales a seguir por todos:
+
+- Las variables se escriben al estilo camelCase.
+
+- En los condicionales, se ponen las llaves de apertura y cierre si o si, aunque no sea necesario.
+
+- Se tabulan correctamente todas las líneas (Reindent).
