@@ -29,16 +29,20 @@ case $ventana_configuracion in
     do
       i=`echo $i | cut -d "'" -f2`
       res_entrada=$res_entrada$contador". "$i" "
-      let contador=$contador+1
+      if [ $contador -eq "1" ]
+      then
+	let contador=$contador+2
+	else
+	let contador=$contador+1
+      fi
     done
-    ventana_entrada_predeterminada=`zenity --list --column="Codigo" --column="Sistema operativo" --title="Eliga una opcion" --height="300" --width="480" \
+    ventana_entrada_predeterminada=`zenity --list --column="Codigo" --column="Sistema operativo" --title="Eliga una opcion" --hide-column="1" --height="300" --width="480" \
     $res_entrada`
     case $? in
       0)
       if [ 'x'$ventana_entrada_predeterminada != 'x' ]
       then
 	ventana_entrada_predeterminada=`echo $ventana_entrada_predeterminada | cut -d "|" -f 1 | cut -d '.' -f 1`
-	ventana_entrada_predeterminada=$((ventana_entrada_predeterminada-1))
 	entrada_por_defecto "$ventana_entrada_predeterminada"
 	else
 	  echo 'Debe de elegir una opcion!'
