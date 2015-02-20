@@ -14,10 +14,19 @@
 4:Contraseña creada con éxito.
 #El usuario selecciona una imagen con una extensión no válida.
 5:Error. Seleccione una imagen válida.
+#Se elimina correctamente la contraseña.
+6:Contraseña eliminada con éxito.
 #El usuario no ha rellenado todos los campos necesarios.
 7:Error. Rellene todos los campos.
-#Error desconocido.
-9:Error. La contraseña no fue creada.
+#Error desconocido al crear la contraseña.
+9:Error. La contraseña no fue creada a causa de un error desconocido.
+#Error al acceder al menú de nueva contraseña porque ya existía una previamente.
+11:Error. Ya existe una contraseña. Para modificar la contraseña existente seleccione la opción "Modificar contraseña".
+#Error al acceder al menú de eliminar contraseña si no hay una establecida.
+13:Error. No hay establecida ninguna contraseña actualmente.
+#Error desconocido al eliminar la contraseña.
+15:Error. La contraseña no fue eliminada a causa de un error desconocido.
+
 
 
   #Listado de mensajes de error (antiguo) ¡NO BORRAR PARA TENER UNA REFERENCIA!

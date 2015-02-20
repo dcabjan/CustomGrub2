@@ -38,22 +38,6 @@ function zenityModificarContra(){
 		fi
 }
 
-function zenityEliminarContra(){
-		zenity --question --title="Eliminar contraseña" \
-		--text="¿Confirma que desea eliminar la contraseña actual?"
-		if [ "$?" == "0" ]
-			then
-			linea=`grep -n "set superusers=" /etc/grub.d/40_custom | cut -f1 -d:`
-			sed -i "${linea},+2d" "/etc/grub.d/40_custom"
-			sudo update-grub2
-			zenity --info --text="La contraseña ha sido eliminada."
-			zenityGestionContraseña
-		else
-			zenity --info --text="Acción cancelada."
-			zenityGestionContraseña
-		fi
-}
-
 function zenityGestionContraseña(){
 	menuContra=$(zenity --list --text="Elija una opción:" --title="Gestión de contraseña" --hide-column="1" --width="400" --height="400" \
 	 --column="Valor" --column="Opciones" \

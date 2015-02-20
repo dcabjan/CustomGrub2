@@ -1,4 +1,3 @@
-#Librería.sh
 #!/bin/bash
 #
 
@@ -84,6 +83,42 @@ TXT
 	fi
 }
 
+#funciones para la opción de eliminar una contraseña existente
+function eliminaContra(){
+	#buscamos las líneas a eliminar	
+	linea=`grep -n "set superusers=" /etc/grub.d/40_custom | cut -f1 -d:`
+	#eliminamos las líneas dedicadas a la contraseña de grub
+	sed -i "${linea},+2d" "/etc/grub.d/40_custom"
+	#comprobamos si la acción de eliminación ha ido bien
+	if [ $? -eq 0 ]
+		#si ha ido bien
+		then
+		#volvemos a generar el fichero de grub
+		#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
+		#mostramos mensaje de que la contraseña se ha eliminado correctamente
+		error 6
+		menuGestionContraseña
+	else
+		error 15
+		menuGestionContraseña
+	fi
+}
+
+#funcion para comprobar si ya existe una contraseña
+function existeContra(){
+	#buscamos la cadena para saber si ya existe una contraseña establecida
+	exists=`grep "set superusers=" /etc/grub.d/40_custom`
+	#comprobamos el valor devuelto
+	if [ "$exists" == "" ]
+		#si existe devolvemos 0
+		then
+		echo 0
+	#si no existe devolvemos 1
+	else
+		echo 1
+	fi
+}
+
 #Código Catalán LIB
 #
 ##Funcion que añade lineas a un archivo de registros .log
@@ -107,7 +142,7 @@ function error () {
 #error=`grep "$1:" "/bin/customgrub2/msg_error" | cut -f 2 -d ":"`
 
 #Para pruebas
-  error=`grep "$1:" "/home/sad/Escritorio/msg_error" | cut -f 2 -d ":"`
+  error=`grep "$1:" "/home/ddd/Escritorio/msg_error" | cut -f 2 -d ":"`
 
 calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error es par o impar
 
