@@ -278,6 +278,7 @@ case $opcionperfil in
 
   "Nuevo perfil")
     #textbox para insertar nuevo perfil
+<<<<<<< HEAD
   perfil=`zenity --entry \
   --title="Añadir un perfil nuevo" \
   --text="Escriba el nombre del perfil nuevo:"`
@@ -289,10 +290,33 @@ case $opcionperfil in
     perfil=`ls /home/.grubcustom/profiles | zenity --list \
   --column="Elige opcion de perfil"`
     perfil_modificar $perfil
+=======
+	perfil=`zenity --entry \
+	--title="Añadir un perfil nuevo" \
+	--text="Escriba el nombre del perfil nuevo:"`
+	
+	#si se confirma, llama a funcion
+	if [ $perfil ]
+	then
+		perfil_crear
+	fi
+  ;;
+  
+  "Modificar perfil")
+  	perfil=`ls /home/.grubcustom/profiles | zenity --list \
+	--column="Elige opcion de perfil"`
+	
+	#si se confirma, llama a funcion
+	if [ $perfil ]
+	then
+		perfil_modificar $perfil
+	fi
+>>>>>>> origin/master
   ;;
   
   "Eliminar perfil")
     #coje lista de directorios existentes del directorio profiles donde estan los perfiles
+<<<<<<< HEAD
   opcion=`ls /home/.grubcustom/profiles | zenity --list \
   --column="Elige opcion de perfil"`
   #al elegir uno se solicita confirmacion
@@ -301,6 +325,21 @@ case $opcionperfil in
   
     perfil_eliminar
   ;;  
+=======
+	opcion=`ls /home/.grubcustom/profiles | zenity --list \
+	--column="Elige opcion de perfil"`
+	
+	#al elegir uno se solicita confirmacion
+	zenity --question \
+	--text="¿Está seguro de que quiere eliminar?"
+	
+	#si se confirma, llama a funcion
+	if [ $? -eq 0 ]
+	then
+		perfil_eliminar
+	fi
+  ;; 
+>>>>>>> origin/master
   
   "Elegir perfil")
     #coje lista de directorios existentes del directorio profiles donde estan los usuarios
@@ -311,14 +350,37 @@ case $opcionperfil in
   zenity --question \
   --text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
   
+<<<<<<< HEAD
     perfil_restaurar
+=======
+	#solicita confirmacion
+	zenity --question \
+	--text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
+	
+	#si se confirma, llama a funcion
+	if [ $? -eq 0 ]
+	then
+		perfil_elegir
+	fi
+>>>>>>> origin/master
   ;;
   
   "Restaurar perfil")
     #solicita confirmacion
+<<<<<<< HEAD
   zenity --question \
   --text="¿Está seguro de que quiere restaurar el perfil seleccionado?"
     perfil_elegir
+=======
+	zenity --question \
+	--text="¿Está seguro de que quiere restaurar el perfil seleccionado?"
+	
+	#si se confirma, llama a funcion
+    if [ $? -eq 0 ]
+	then
+		perfil_restaurar
+	fi
+>>>>>>> origin/master
   ;;
 
 esac
