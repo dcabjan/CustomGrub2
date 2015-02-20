@@ -192,8 +192,8 @@ function perfiles () {
 
 #comprobacion de root
 if [ $USER != "root" ]; then
-#mostrar mensaje error autenticacion
-exit
+	#mostrar mensaje error autenticacion
+	exit
 fi
 
 #muestra menu con opciones a elegir
@@ -214,6 +214,7 @@ case $opcionperfil in
 	--title="Añadir un perfil nuevo" \
 	--text="Escriba el nombre del perfil nuevo:"`
 	
+	#si se confirma, llama a funcion
 	if [ $perfil ]
 	then
 		perfil_crear
@@ -223,17 +224,25 @@ case $opcionperfil in
   "Modificar perfil")
   	perfil=`ls /home/.grubcustom/profiles | zenity --list \
 	--column="Elige opcion de perfil"`
-    perfil_modificar $perfil
+	
+	#si se confirma, llama a funcion
+	if [ $perfil ]
+	then
+		perfil_modificar $perfil
+	fi
   ;;
   
   "Eliminar perfil")
     #coje lista de directorios existentes del directorio profiles donde estan los perfiles
 	opcion=`ls /home/.grubcustom/profiles | zenity --list \
 	--column="Elige opcion de perfil"`
+	
 	#al elegir uno se solicita confirmacion
 	zenity --question \
 	--text="¿Está seguro de que quiere eliminar?"
-	if [ $? = 0 ]
+	
+	#si se confirma, llama a funcion
+	if [ $? -eq 0 ]
 	then
 		perfil_eliminar
 	fi
@@ -247,7 +256,9 @@ case $opcionperfil in
 	#solicita confirmacion
 	zenity --question \
 	--text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
-	if [ $? = 0 ]
+	
+	#si se confirma, llama a funcion
+	if [ $? -eq 0 ]
 	then
 		perfil_elegir
 	fi
@@ -257,7 +268,9 @@ case $opcionperfil in
     #solicita confirmacion
 	zenity --question \
 	--text="¿Está seguro de que quiere restaurar el perfil seleccionado?"
-    if [ $? = 0 ]
+	
+	#si se confirma, llama a funcion
+    if [ $? -eq 0 ]
 	then
 		perfil_restaurar
 	fi

@@ -313,7 +313,7 @@ function color () {
 #
 ##MENU PRINCIPAL
 function perfil_modificar() {
-  #se abrira el menu principal para empezar a modificar
+  #se abrira el menu principal para empezar a modificar, pasandole el perfil elegido para modificar
   perfil=$1
   export perfil
   ./menu.sh
@@ -322,6 +322,7 @@ function perfil_modificar() {
 function perfil_eliminar() {
 	#elimina directorio de perfil
     rmdir /home/.customgrub2/profiles/$1
+	
 	#muestra otra vez el menu principal
 	./perfiles.sh
 }
@@ -331,7 +332,6 @@ function perfil_crear() {
     mkdir /home/.grubcustom/profiles/$perfil
 	
 	#copia ficheros grub default a perfil
-	
 	cp /home/.customgrub2/profiles/.default/default.grub /home/.customgrub2/profiles/$perfil
 	cp /home/.customgrub2/profiles/.default/grub /home/.customgrub2/profiles/$perfil
 	cp /home/.customgrub2/profiles/.default/grub.cfg /home/.customgrub2/profiles/$perfil
@@ -346,6 +346,7 @@ function perfil_elegir() {
     cp /home/.customgrub2/profiles/$perfil/default.grub /lib/plymouth/themes/default.grub
     cp /home/.customgrub2/profiles/$perfil/grub /etc/default/grub
     cp /home/.customgrub2/profiles/$perfil/grub.cfg /boot/grub2/grub.cfg
+	
 	#muestra otra vez el menu principal
 	./perfiles.sh
 }
@@ -356,6 +357,7 @@ function perfil_restaurar() {
     cp /home/.customgrub2/profiles/.default/default.grub /lib/plymouth/themes/default.grub
     cp /home/.customgrub2/profiles/.default/grub /etc/default/grub
     cp /home/.customgrub2/profiles/.default/grub.cfg /boot/grub2/grub.cfg
+	
 	#muestra otra vez el menu principal
 	./perfiles.sh
 
