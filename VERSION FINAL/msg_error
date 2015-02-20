@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#Base de datos de errores
+##Impares == errores
+##Pares == Información
+1:No se guardaron los cambios. #El usuario presiona el botón de cancelar o volver.
+2:Cambios realizados correctamente. #El usuario pulsa en Aceptar y se realiza la modificación.
+3:Error. Seleccione una opción válida. #El usuario pulsa en Aceptar y no ha seleccionado ninguna opción.
+5:Error. Seleccione una imagen válida. #El usuario selecciona una imagen con una extensión no válida.
+
+
+  #Listado de mensajes de error (antiguo) ¡NO BORRAR PARA TENER UNA REFERENCIA!
+  #case $codigoError in
+  #	0)
+  #		zenity --info --text "Cambios realizados correctamente."
+  #	;;
+  #	1)
+  #		zenity --error --text "No se guardaron los cambios."
+  #	;;
+  #	2)
+  #		zenity --error --text "Selecciona una imagen válida."
+  #	;;
+  #	3)
+  #		zenity --error --text "Seleccione una opción válida."
+  #	;;
+  #esac
+    
+##############-Cosas que faltan-#####################
+#Codigo de errores
+#Logs --> Garcia y Cabot
+#Ordenar Codigo (Cambiar nombre de variables)
+#####################################################
+
+##############-Cosas "hechas"-#####################
+#Instalador (a falta de probar que funciona)
+#Menú pirncipal (a falta de los logs)
+#####################################################
