@@ -214,7 +214,10 @@ case $opcionperfil in
 	--title="Añadir un perfil nuevo" \
 	--text="Escriba el nombre del perfil nuevo:"`
 	
-    perfil_crear
+	if [ $perfil ]
+	then
+		perfil_crear
+	fi
   ;;
   
   "Modificar perfil")
@@ -230,9 +233,11 @@ case $opcionperfil in
 	#al elegir uno se solicita confirmacion
 	zenity --question \
 	--text="¿Está seguro de que quiere eliminar?"
-	
-    perfil_eliminar
-  ;;  
+	if [ $? = 0 ]
+	then
+		perfil_eliminar
+	fi
+  ;; 
   
   "Elegir perfil")
     #coje lista de directorios existentes del directorio profiles donde estan los usuarios
@@ -242,15 +247,20 @@ case $opcionperfil in
 	#solicita confirmacion
 	zenity --question \
 	--text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
-	
-    perfil_restaurar
+	if [ $? = 0 ]
+	then
+		perfil_elegir
+	fi
   ;;
   
   "Restaurar perfil")
     #solicita confirmacion
 	zenity --question \
 	--text="¿Está seguro de que quiere restaurar el perfil seleccionado?"
-    perfil_elegir
+    if [ $? = 0 ]
+	then
+		perfil_restaurar
+	fi
   ;;
 
 esac

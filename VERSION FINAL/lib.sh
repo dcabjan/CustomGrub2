@@ -314,59 +314,49 @@ function color () {
 ##MENU PRINCIPAL
 function perfil_modificar() {
   #se abrira el menu principal para empezar a modificar
-  #¿¿¿QUÉ PERFIL???
   perfil=$1
   export perfil
   ./menu.sh
 }
 
 function perfil_eliminar() {
-  #elimina directorio de perfil
-  ##EVALUAR CODIGOS DE ERRORES FUERA
-  if [ $? = 0 ]
-  then
+	#elimina directorio de perfil
     rmdir /home/.customgrub2/profiles/$1
-    #QUITAR mensaje de confirmacion
-    zenity --info \
-    --text="perfil eliminado correctamente"
 	#muestra otra vez el menu principal
 	./perfiles.sh
-  fi
 }
+
 function perfil_crear() {
-  #crea directorio de perfil si ha sido introducido
-  if [ $perfil ]
-  then
+    #crea directorio de perfil si ha sido introducido
     mkdir /home/.grubcustom/profiles/$perfil
-    #QUITAR mensaje de confirmacion
-    zenity --info \
-    --text="perfil creado correctamente"
+	
+	#copia ficheros grub default a perfil
+	
+	cp /home/.customgrub2/profiles/.default/default.grub /home/.customgrub2/profiles/$perfil
+	cp /home/.customgrub2/profiles/.default/grub /home/.customgrub2/profiles/$perfil
+	cp /home/.customgrub2/profiles/.default/grub.cfg /home/.customgrub2/profiles/$perfil
+	
 	#muestra otra vez el menu principal
 	./perfiles.sh
-  fi
 }
+
 function perfil_elegir() {
   
-  if [ $? = 0 ]
-  then
     #restaurar del directorio del perfil los siguientes archivos al directorio original
     cp /home/.customgrub2/profiles/$perfil/default.grub /lib/plymouth/themes/default.grub
     cp /home/.customgrub2/profiles/$perfil/grub /etc/default/grub
     cp /home/.customgrub2/profiles/$perfil/grub.cfg /boot/grub2/grub.cfg
 	#muestra otra vez el menu principal
 	./perfiles.sh
-  fi	
 }
+
 function perfil_restaurar() {
   
-  if [ $? = 0 ]
-  then
     #restaurar del directorio .default los siguientes archivos al directorio original
     cp /home/.customgrub2/profiles/.default/default.grub /lib/plymouth/themes/default.grub
     cp /home/.customgrub2/profiles/.default/grub /etc/default/grub
     cp /home/.customgrub2/profiles/.default/grub.cfg /boot/grub2/grub.cfg
 	#muestra otra vez el menu principal
 	./perfiles.sh
-  fi
-  
+
 }
