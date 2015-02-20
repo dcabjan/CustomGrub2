@@ -14,7 +14,7 @@ bucle=true
 #Menú principal
 while [ $bucle = true ]
 do
-  opcion=$(zenity --list --print-column="1" --hide-column="1" --title="Elija una opción" \
+  opcion=$(zenity --list --print-column="1" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
   --column="Valor" --column="Seleccione una opción" \
       "1" \ "Gestión de contraseña" \
       "2" \ "Personalización" \
@@ -25,7 +25,7 @@ do
 
 	if [ $? -eq 1 ]
 	then
-		echo "Ir al menú de perfiles"
+		perfiles
 	else
       case $opcion in
           1)

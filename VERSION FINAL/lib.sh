@@ -5,12 +5,46 @@
 #Llamada a librerías de menú
 #. /home/sad/Escritorio/lib.sh
 
+#
+#IDEA DE REYERO PARA LOS LOGS
+#
+#En vez de llamar a la función "anadirLog", que escribe directamente sobre el fichero, llamar a una función que vaya montando la super variable que contenga todos los cambios realizados.
+#En plan:
+#
+#function montarVar() {
+#	texto="Se ha modificado $1 a $2"
+#	textoLog=$textoLog$texto
+#}
+#
+#anadirLog() { ---> Al igual que se hacía antes, crearíamos los directorios y ficheros pertinentes en caso de no existir, y escribiríamos toda la megavariable, precedido del nombre del perfil
+#    fecha=`date +"%D"`
+#	hora=`date +"%H:%M"`
+#    location="/home/.customgrub2/profiles"
+#    folder=`ls $location/$fecha`
+#  
+#    if [ $? -eq 1 ] ##Crea o añade registro log en un archivo.
+#    then
+#    	mkdir $location/$fecha
+#    fi
+#    
+#    echo -e "En perfil $perfil:\n$textoLog" >> $location/$fecha/$hora
+#}
+#
+#miFuncionDeCambiarColor() {
+#	cambioElColor ---> Realizo todo el procedimiento para cambiar el color
+#	montaVar "cambiar color" $color  ---> AQUI LLAMAMOS A LA FUNCION PARA MONTAR EL TEXTO Y LE PASAMOS COMO VARIABLES LOS ASPECTOS QUE HEMOS MODIFICADO (EL QUÉ Y A QUÉ VALOR)
+#}
+#
+#Cuando se haga el "Guardar cambios", se procede a copiar los ficheros de GRUB al perfil, se hace el update-grub2 y se escribe la variable $textoLog como log
+#FIN DE IDEA DE REYERO
+#
+
 #Código Catalán LIB
 #
 ##Funcion que añade lineas a un archivo de registros .log
 function anadirLog() {
-    fecha=`date +"%D"`
-	hora=`date +"%H:%M"`
+    fecha=`date +"%d_%m_%Y"`
+	hora=`date +"%H_%M"`
     location="/home/.customgrub2/profiles"
     folder=`ls $location/$fecha`
   
@@ -24,9 +58,22 @@ function anadirLog() {
 
 ##Busca el codigo de error recibido como parametro en una base de datos
 function error () {
- error=`grep "$1:" "/bin/customgrub2/msg_error" | cut -f 2 -d ":"`
- export error
- return $error
+#Original del programa 
+#error=`grep "$1:" "/bin/customgrub2/msg_error" | cut -f 2 -d ":"`
+
+#Para pruebas
+  error=`grep "$1:" "/home/sad/Escritorio/msg_error" | cut -f 2 -d ":"`
+
+calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error es par o impar
+
+	if [ $calc -eq 0 ]
+	then
+		label="--info" #Si es par, se pone la etiqueta info
+	else
+		label="--error" #Si es impar, se pone la etiqueta error
+	fi
+
+	zenity $label --text "$error"
 }
 
 ##reemplaza valores de variables ya definidas a partir de un string $1 y un archivo $2
@@ -142,7 +189,7 @@ function resolucion () {
 		if [ "$opcion" = "" ]
 		then
 			codigoError=3
-			return $codigoError
+			error $codigoError
 		else
 			archivo="/etc/default/grub"
 			variable="GRUB_GFXMODE="
@@ -163,13 +210,13 @@ function resolucion () {
 			let contador=$contador+1
 			done
 			codigoError=2
-           		anadirLog "resolucion" $opcion
-			return $codigoError
+			error $codigoError
+      anadirLog "resolucion" $opcion
 		fi
 	else
-		codigoError=1
-		menuConfiguracion
-		return $codigoError
+	codigoError=1
+	error $codigoError
+	menuPersonalizar
 	fi
 }
 
@@ -203,20 +250,18 @@ function imgfondo () {
 
 				echo "$variable\"$1\"" >> $archivo
 				codigoError=2
-                anadirLog "imagen de fondo" $ruta
-				return $codigoError
+				error $codigoError
+        anadirLog "imagen de fondo" $ruta
 			else
 				codigoError=5
-				return $codigoError
+				error $codigoError
+				menuPersonalizar
 			fi
 		else
 			codigoError=1
-			menuConfiguracion
-			return $codigoError
+			error $codigoError
+			menuPersonalizar
 		fi
-	else
-		codigoError=1
-		return $codigoError
 	fi
 }
 
@@ -230,7 +275,7 @@ function color () {
 		if [ "$color" = "" ]
 		then
 			codigoError=3
-			return $codigoError
+			error $codigoError
 		else
 			archivo="/lib/plymouth/themes/default.grub"
 
@@ -252,13 +297,13 @@ function color () {
 			fi
 			echo "$variable$color" >> $archivo
 			codigoError=2
-            anadirLog "$texto" $color
-			return $codigoError
+      anadirLog "$texto" $color
+			error $codigoError
 		fi
 	else
 		codigoError=1
-		menuConfiguracion
-		return $codigoError
+		error $codigoError
+		menuPersonalizar
 	fi
 }
 
