@@ -190,6 +190,12 @@ esac
 #Ventana de perfiles
 function perfiles () {
 
+#comprobacion de root
+if [ $USER != "root" ]; then
+#mostrar mensaje error autenticacion
+exit
+fi
+
 #muestra menu con opciones a elegir
 opcionperfil=`zenity --list \
  --column="Elige opcion de perfil" \
