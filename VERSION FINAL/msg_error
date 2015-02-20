@@ -5,13 +5,19 @@
 ##Pares == Información (--info)
 
 #El usuario presiona el botón de cancelar o volver.
-1:No se realizaron cambios.
+1:Error. No se realizaron los cambios.
 #El usuario pulsa en Aceptar y se realiza la modificación.
 2:Cambios realizados correctamente.
 #El usuario pulsa en Aceptar y no ha seleccionado ninguna opción.
 3:Error. Seleccione una opción válida.
+#Se crea correctamente la contraseña.
+4:Contraseña creada con éxito.
 #El usuario selecciona una imagen con una extensión no válida.
 5:Error. Seleccione una imagen válida.
+#El usuario no ha rellenado todos los campos necesarios.
+7:Error. Rellene todos los campos.
+#Error desconocido.
+9:Error. La contraseña no fue creada.
 
 
   #Listado de mensajes de error (antiguo) ¡NO BORRAR PARA TENER UNA REFERENCIA!

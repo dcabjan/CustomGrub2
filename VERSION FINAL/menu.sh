@@ -5,9 +5,82 @@
 
 . /home/sad/Escritorio/menus_lib.sh
 
-#
-#CAMBIAR RUTA DE ARRIBA POR LA RUTA FINAL DEL USUARIO
-#
+#ventana del menú de contraseñas
+function menuGestionContra(){
+  #muestra la ventana del menú principal de contraseñas
+  menuContra=$(zenity --list --cancel-label=Atrás --text="Elija una opción:" --title="Gestión de contraseña" --hide-column="1" --width="400" --height="400" \
+   --column="Valor" --column="Opciones" \
+   1 "Crear contraseña" \
+   2 "Modificar contraseña" \
+   3 "Eliminar contraseña")
+  #se evalua si el usuario clica en aceptar o atras
+  if [ "$?" == 0 ]
+    #si hace clic en aceptar
+    then
+    #elegir submenú si el usuario clica en aceptar y ha seleccionado una opción
+    if [ "$menuContra" != "" ]
+      then
+      #dependiendo del valor devuelto se accede al siguiente submenú
+      case $menuContra in
+        "1")
+        #muestra la ventana de nueva contraseña
+        nuevaDatos=($(zenity --forms --cancel-label=Atrás --text="Introduzca el nombre de usuario y la contraseña deseada:" --title="Crear contraseña" width="400" --height="200" --separator=" " \
+        --add-entry="Usuario" \
+        --add-password="Contraseña" \
+        --add-password="Repita contraseña"))
+        #se evalua si el usuario clica en aceptar o atras
+        if [ "$?" == 0 ]
+          #si hace clic en aceptar, continua el proceso
+          then
+          #comprueba si el usuario ha rellenado todos los campos
+          if [ ${#nuevaDatos[*]} -ne 3 ]
+          then
+          error 7
+          menuGestionContra
+        #si el usuario ha rellenado todos los campos
+        else
+          #accedemos a la función que crea la nueva contraseña
+          nuevaContra ${nuevaDatos[*]}
+        fi
+        #si hace clic en atrás, vuelve al menú principal de contraseñas
+        else
+          menuGestionContra
+        fi
+        ;;
+        "2")
+        modificaContra=($(zenity --forms --cancel-label=Atrás --text="Introduzca la nueva contraseña:" --title="Modificar contraseña" width="400" --height="200" --separator=" " \
+        --add-password="Contraseña" \
+        --add-password="Repita contraseña"))
+        #se evalua si el usuario clica en aceptar o atras
+        if [ "$?" == 0 ]
+          #si hace clic en aceptar, continua el proceso
+          then
+          modificaContra
+        #si hace clic en atrás, vuelve al menú principal de contraseñas
+        else
+          menuGestionContra
+        fi
+        ;;
+        "3")
+        eliminaContra=$(zenity --question --cancel-label=Atrás --title="Eliminar contraseña" \
+        --text="¿Confirma que desea eliminar la contraseña actual?")
+        #se evalua si el usuario clica en aceptar o atras
+        if [ "$?" == 0 ]
+          #si hace clic en aceptar, continua el proceso
+          then
+          eliminaContra
+        #si hace clic en atrás, vuelve al menú principal de contraseñas
+        else
+          menuGestionContra
+        fi
+        ;;
+      esac
+    else
+      error 3
+      menuGestionContra
+    fi
+  fi
+}
 
 bucle=true
 

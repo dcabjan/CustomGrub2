@@ -39,6 +39,51 @@
 #FIN DE IDEA DE REYERO
 #
 
+#codigo cabot contraseñas
+#
+#funciones para la opción de crear nueva contraseña
+function nuevaContra(){
+	datos=($@)
+	#comprueba si ambas contraseñas coinciden
+	if [ ${datos[1]} == ${datos[2]} ]
+		#si coinciden modificamos el fichero
+		then
+		#creamos un fichero temporal con la contraseña
+		cat > temp <<TEMP
+${datos[1]}
+${datos[1]}
+
+TEMP
+		#encriptamos la contraseña
+		encrypt=(`grub-mkpasswd-pbkdf2 < temp`)
+		#escribimos el código en el fichero para crear la contraseña
+		cat >> /etc/grub.d/40_custom <<TXT
+set superusers="${datos[0]}"
+password ${datos[0]} ${encrypt[12]}
+TXT
+		#comprobamos si la acción de escritura ha ido bien
+		if [ $? -eq 0 ]
+			#si ha ido bien
+			then
+			#volvemos a generar el fichero de grub
+			#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
+			#eliminamos el fichero temporal
+			rm temp
+			#mostramos mensaje de que la contraseña se ha creado correctamente
+			error 4
+			menuGestionContra
+		#si la acción de escritura no ha ido bien
+		else
+			error 9
+			menuGestionContra
+		fi
+	#si las contraseñas no coinciden mostramos mensaje de error
+	else
+		error 4
+		menuGestionContra
+	fi
+}
+
 #Código Catalán LIB
 #
 ##Funcion que añade lineas a un archivo de registros .log
