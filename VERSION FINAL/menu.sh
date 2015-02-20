@@ -23,10 +23,10 @@ do
       "5" \ "Guardar cambios" \
       "6" \ "Salir")
 
-	if [ $? -eq 1 ]
-	then
-		perfiles
-	else
+  if [ $? -eq 1 ]
+  then
+    perfiles
+  else
       case $opcion in
           1)
              #Mostramos el menú de gestión de contraseña
@@ -41,19 +41,19 @@ do
           ;;
           4)
               echo "Ventana de registro de actividad"
-          ;;	
+          ;;  
           5)
-          	#Copiar los archivos de GRUB a la carpeta del perfil del usuario
+            #Copiar los archivos de GRUB a la carpeta del perfil del usuario
             cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/$perfil
-			cp /etc/default/grub /home/.customgrub2/profiles/$perfil
-			cp /boot/grub2/grub.cfg /home/.customgrub2/profiles/$perfil
+      cp /etc/default/grub /home/.customgrub2/profiles/$perfil
+      cp /boot/grub2/grub.cfg /home/.customgrub2/profiles/$perfil
             #Actualizar el GRUB
             update-grub2                
             ##Añadir a archivo log los cambios realizados. 
           ;;
           6)
-          	bucle=false
+            bucle=false
           ;;
           esac
-	fi
+  fi
 done

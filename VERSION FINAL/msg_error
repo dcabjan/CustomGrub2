@@ -16,18 +16,18 @@
 
   #Listado de mensajes de error (antiguo) ¡NO BORRAR PARA TENER UNA REFERENCIA!
   #case $codigoError in
-  #	0)
-  #		zenity --info --text "Cambios realizados correctamente."
-  #	;;
-  #	1)
-  #		zenity --error --text "No se realizaron cambios."
-  #	;;
-  #	2)
-  #		zenity --error --text "Selecciona una imagen válida."
-  #	;;
-  #	3)
-  #		zenity --error --text "Seleccione una opción válida."
-  #	;;
+  # 0)
+  #   zenity --info --text "Cambios realizados correctamente."
+  # ;;
+  # 1)
+  #   zenity --error --text "No se realizaron cambios."
+  # ;;
+  # 2)
+  #   zenity --error --text "Selecciona una imagen válida."
+  # ;;
+  # 3)
+  #   zenity --error --text "Seleccione una opción válida."
+  # ;;
   #esac
     
 ##############-Cosas que faltan-#####################

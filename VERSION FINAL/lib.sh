@@ -39,6 +39,10 @@
 #FIN DE IDEA DE REYERO
 #
 
+#codigo cabot contraseñas
+#
+
+
 #Código Catalán LIB
 #
 ##Funcion que añade lineas a un archivo de registros .log
