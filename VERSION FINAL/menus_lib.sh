@@ -27,6 +27,7 @@ function menuGestionContra(){
         "1")
         #evaluamos si existe o no una contraseña previamente
         if [ $passExist -eq 0 ]
+          #si no existe una contraseña previamente
           then
           #muestra la ventana de nueva contraseña
           nuevaDatos=($(zenity --forms --cancel-label=Atrás --text="Introduzca el nombre de usuario y la contraseña deseada:" --title="Crear contraseña" width="400" --height="200" --separator=" " \
@@ -52,23 +53,43 @@ function menuGestionContra(){
           else
             menuGestionContra
           fi
-        #si ya existe una contraseña mostramos un mensaje de error
+        #si existe una contraseña previamente un mensaje de error
         else
           error 11
           menuGestionContra
         fi
       ;;
       "2")
-modificaContra=($(zenity --forms --cancel-label=Atrás --text="Introduzca la nueva contraseña:" --title="Modificar contraseña" width="400" --height="200" --separator=" " \
-  --add-password="Contraseña" \
-  --add-password="Repita contraseña"))
+      #evaluamos si existe o no una contraseña previamente
+      if [ $passExist -eq 1 ]
+        #si existe una contraseña previamente
+        then
+        #muestra la ventana de modificar contraseña
+        modificaDatos=($(zenity --forms --cancel-label=Atrás --text="Introduzca la nueva contraseña:" --title="Modificar contraseña" width="400" --height="200" --separator=" " \
+        --add-password="Contraseña" \
+        --add-password="Repita contraseña"))
         #se evalua si el usuario clica en aceptar o atras
         if [ "$?" == 0 ]
           #si hace clic en aceptar, continua el proceso
           then
-          modificaContra
+          #comprueba si el usuario ha rellenado todos los campos
+          if [ ${#modificaDatos[*]} -ne 2 ]
+            #si no los ha rellenado todos muestra mensaje de error
+            then
+            error 7
+            menuGestionContra
+          #si el usuario ha rellenado todos los campos
+          else
+            #accedemos a la función que crea la nueva contraseña
+            modificaContra ${modificaDatos[*]}
+          fi
         #si hace clic en atrás, vuelve al menú principal de contraseñas
+        else
+          menuGestionContra
+        fi
+      #si no existe una contraseña mostramos un mensaje de error
       else
+        error 13
         menuGestionContra
       fi
       ;;

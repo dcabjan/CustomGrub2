@@ -48,18 +48,18 @@ function nuevaContra(){
 		#si coinciden modificamos el fichero
 		then
 		#creamos un fichero temporal con la contraseña
-		cat > temp <<TEMP
+		cat > temp <<TEMPNEW
 ${datos[1]}
 ${datos[1]}
 
-TEMP
+TEMPNEW
 		#encriptamos la contraseña
 		encrypt=(`grub-mkpasswd-pbkdf2 < temp`)
 		#escribimos el código en el fichero para crear la contraseña
-		cat >> /etc/grub.d/40_custom <<TXT
+		cat >> /etc/grub.d/40_custom <<NEW
 set superusers="${datos[0]}"
 password ${datos[0]} ${encrypt[12]}
-TXT
+NEW
 		#comprobamos si la acción de escritura ha ido bien
 		if [ $? -eq 0 ]
 			#si ha ido bien
@@ -83,7 +83,50 @@ TXT
 	fi
 }
 
-#funciones para la opción de eliminar una contraseña existente
+#funcion para la opción de modificar una contraseña existente
+function modificaContra(){
+	datos=($@)
+	#comprueba si ambas contraseñas coinciden
+	if [ ${datos[0]} == ${datos[1]} ]
+		#si coinciden modificamos el fichero
+		then
+		#creamos un fichero temporal con la contraseña
+		cat > temp <<TEMPMOD
+${datos[0]}
+${datos[0]}
+
+TEMPMOD
+		#encriptamos la contraseña
+		encrypt=(`grub-mkpasswd-pbkdf2 < temp`)
+		#buscamos la línea a modificar
+		linea=($(grep -n "set superusers=" /etc/grub.d/40_custom | tr ":" " " | tr "\"" " "))
+		user=${linea[3]}
+		#sustituimos el string que contiene la contraseña
+		sed -i "s/^password $user.*/password $user ${encrypt[12]}/" /etc/grub.d/40_custom
+		#comprobamos si la acción de sustitución ha ido bien
+		if [ $? -eq 0 ]
+			#si ha ido bien
+			then
+			#volvemos a generar el fichero de grub
+			#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
+			#eliminamos el fichero temporal
+			rm temp
+			#mostramos mensaje de que la contraseña se ha modificado correctamente
+			error 8
+			menuGestionContra
+		#si la acción de sustitución no ha ido bien
+		else
+			error 9
+			menuGestionContra
+		fi
+	#si las contraseñas no coinciden mostramos mensaje de error
+	else
+		error 4
+		menuGestionContra
+	fi
+}
+
+#funcion para la opción de eliminar una contraseña existente
 function eliminaContra(){
 	#buscamos las líneas a eliminar	
 	linea=`grep -n "set superusers=" /etc/grub.d/40_custom | cut -f1 -d:`

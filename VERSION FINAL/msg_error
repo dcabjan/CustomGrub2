@@ -18,6 +18,8 @@
 6:Contraseña eliminada con éxito.
 #El usuario no ha rellenado todos los campos necesarios.
 7:Error. Rellene todos los campos.
+#Se modifica correctamente la contraseña.
+8:Contraseña modificada con éxito.
 #Error desconocido al crear la contraseña.
 9:Error. La contraseña no fue creada a causa de un error desconocido.
 #Error al acceder al menú de nueva contraseña porque ya existía una previamente.
@@ -26,6 +28,8 @@
 13:Error. No hay establecida ninguna contraseña actualmente.
 #Error desconocido al eliminar la contraseña.
 15:Error. La contraseña no fue eliminada a causa de un error desconocido.
+#Error desconocido al modificar la contraseña.
+17:Error. La contraseña no fue modificada a causa de un error desconocido.
 
 
 
