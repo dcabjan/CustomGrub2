@@ -42,7 +42,7 @@ do
           ;;	
           5)
             #Ventana confirmacion de guardar cambios
-          	ventanaConfirm=(`zenity --question --text "¿Esta usted seguro que desea guardar los cambios realizados?"`)
+          	ventanaConfirm=(`zenity --question --text="¿Esta usted seguro que desea guardar los cambios realizados?"`)
             if [ $? -eq 0 ]
             then
               guardarCambios
