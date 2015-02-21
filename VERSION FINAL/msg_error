@@ -1,8 +1,6 @@
-#!/bin/bash
-
 #Base de datos de errores
-##Impares == errores (--error)
-##Pares == Información (--info)
+#Impares == errores (--error)
+#Pares == Información (--info)
 
 #El usuario presiona el botón de cancelar o volver.
 1:Error. No se realizaron los cambios.
@@ -30,32 +28,3 @@
 15:Error. La contraseña no fue eliminada a causa de un error desconocido.
 #Error desconocido al modificar la contraseña.
 17:Error. La contraseña no fue modificada a causa de un error desconocido.
-
-
-
-  #Listado de mensajes de error (antiguo) ¡NO BORRAR PARA TENER UNA REFERENCIA!
-  #case $codigoError in
-  #	0)
-  #		zenity --info --text "Cambios realizados correctamente."
-  #	;;
-  #	1)
-  #		zenity --error --text "No se realizaron cambios."
-  #	;;
-  #	2)
-  #		zenity --error --text "Selecciona una imagen válida."
-  #	;;
-  #	3)
-  #		zenity --error --text "Seleccione una opción válida."
-  #	;;
-  #esac
-    
-##############-Cosas que faltan-#####################
-#Codigo de errores
-#Logs --> Garcia y Cabot
-#Ordenar Codigo (Cambiar nombre de variables)
-#####################################################
-
-##############-Cosas "hechas"-#####################
-#Instalador (a falta de probar que funciona)
-#Menú pirncipal (a falta de los logs)
-#####################################################

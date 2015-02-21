@@ -1,45 +1,55 @@
 #!/bin/bash
 #
 
-#Llamada a librerías de menú
-#. /home/sad/Escritorio/lib.sh
-
 #
-#IDEA DE REYERO PARA LOS LOGS
-#
-#En vez de llamar a la función "anadirLog", que escribe directamente sobre el fichero, llamar a una función que vaya montando la super variable que contenga todos los cambios realizados.
-#En plan:
-#
-#function montarVar() {
-#	texto="Se ha modificado $1 a $2\n"
-#	textoLog=$textoLog$texto
-#}
-#
-#anadirLog() { ---> Al igual que se hacía antes, crearíamos los directorios y ficheros pertinentes en caso de no existir, y escribiríamos toda la megavariable, precedido del nombre del perfil
-#    fecha=`date +"%d-%m-%Y"`
-#	hora=`date +"%H:%M"`
-#    location="/home/.customgrub2/profiles"
-#    folder=`ls $location/$fecha`
-#  
-#    if [ $? -eq 1 ] ##Crea o añade registro log en un archivo.
-#    then
-#    	mkdir $location/$fecha
-#    fi
-#    
-#    echo -e "En perfil $perfil:\n$textoLog" >> $location/$fecha/$hora
-#}
-#
-#miFuncionDeCambiarColor() {
-#	cambioElColor ---> Realizo todo el procedimiento para cambiar el color
-#	montaVar "cambiar color" $color  ---> AQUI LLAMAMOS A LA FUNCION PARA MONTAR EL TEXTO Y LE PASAMOS COMO VARIABLES LOS ASPECTOS QUE HEMOS MODIFICADO (EL QUÉ Y A QUÉ VALOR)
-#}
-#
-#Cuando se haga el "Guardar cambios", se procede a copiar los ficheros de GRUB al perfil, se hace el update-grub2 y se escribe la variable $textoLog como log
-#FIN DE IDEA DE REYERO
+#Librería de funciones
 #
 
-#codigo cabot contraseñas
-#
+##Busca el codigo de error recibido como parametro en una base de datos
+function error () {
+
+#Utilizamos una expresión regular para buscar en la base de datos de códigos de error/información
+error=`grep "^${1}:" "/bin/.customgrub2/msg_error" | cut -f 2 -d ":"`
+
+calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error es par o impar
+
+	if [ $calc -eq 0 ]
+	then
+		label="--info" #Si es par, se pone la etiqueta info
+	else
+		label="--error" #Si es impar, se pone la etiqueta error
+	fi
+
+	mensaje $label "$error"
+}
+
+#Realiza un guardado de los cambios realizados
+function guardarCambios () {
+  #Copiar los archivos de GRUB a la carpeta del perfil del usuario
+  cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/$perfil
+  cp /etc/default/grub /home/.customgrub2/profiles/$perfil
+  cp /boot/grub2/grub.cfg /home/.customgrub2/profiles/$perfil
+  
+  #Actualizar el GRUB
+  update-grub2                
+  ##Añadir a archivo log los cambios realizados. 
+}
+
+##Funcion que añade lineas a un archivo de registros .log
+function anadirLog() {
+    fecha=`date +"%d_%m_%Y"`
+	hora=`date +"%H_%M"`
+    location="/home/.customgrub2/profiles"
+    folder=`ls $location/$fecha`
+  
+    if [ $? -eq 1 ] ##Crea o añade registro log en un archivo.
+    then
+    	mkdir $location/$fecha
+    fi
+    
+    echo -e "Se ha modificado $1 a $2 en perfil $perfil\n" >> $location/$fecha/$hora
+}
+
 #funciones para la opción de crear nueva contraseña
 function nuevaContra(){
 	datos=($@)
@@ -162,60 +172,13 @@ function existeContra(){
 	fi
 }
 
-#Código Catalán LIB
-#
-##Funcion que añade lineas a un archivo de registros .log
-function anadirLog() {
-    fecha=`date +"%d_%m_%Y"`
-	hora=`date +"%H_%M"`
-    location="/home/.customgrub2/profiles"
-    folder=`ls $location/$fecha`
-  
-    if [ $? -eq 1 ] ##Crea o añade registro log en un archivo.
-    then
-    	mkdir $location/$fecha
-    fi
-    
-    echo -e "Se ha modificado $1 a $2 en perfil $perfil\n" >> $location/$fecha/$hora
-}
-
-##Busca el codigo de error recibido como parametro en una base de datos
-function error () {
-#Original del programa 
-#error=`grep "$1:" "/bin/customgrub2/msg_error" | cut -f 2 -d ":"`
-
-#Para pruebas
-  error=`grep "$1:" "/home/ddd/Escritorio/msg_error" | cut -f 2 -d ":"`
-
-calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error es par o impar
-
-	if [ $calc -eq 0 ]
-	then
-		label="--info" #Si es par, se pone la etiqueta info
-	else
-		label="--error" #Si es impar, se pone la etiqueta error
-	fi
-
-	mensaje $label "$error"
-}
-#Realiza un guardado de los cambios realizados
-function guardarCambios () {
-  #Copiar los archivos de GRUB a la carpeta del perfil del usuario
-  cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/$perfil
-  cp /etc/default/grub /home/.customgrub2/profiles/$perfil
-  cp /boot/grub2/grub.cfg /home/.customgrub2/profiles/$perfil
-  
-  #Actualizar el GRUB
-  update-grub2                
-  ##Añadir a archivo log los cambios realizados. 
-}
-
 ##reemplaza valores de variables ya definidas a partir de un string $1 y un archivo $2
 function buscaReemplaza() {
   limpiar=`echo "$1" | tr -d " "`
   test=`grep "$limpiar" "$2" | tr -d " " | cut -d "=" -f 2`
   sed -i "s/$test/$3/g" "$2"
 } 
+
 ##Cambia el tiempo de espera del sistema en arrancar.
 function timeout() {
   archivo="/etc/default/grub"
@@ -223,6 +186,7 @@ function timeout() {
   buscaReemplaza "$string" $archivo "$1"
   anadirLog "timeout" $1
 }
+
 ##Comenta lineas añadiendo un #
 function comentarLinea() {
   buscar=`grep $1 $2`
@@ -245,6 +209,7 @@ function comentarLinea() {
     done
   done
 }
+
 #Descomenta la linea comprobando si el primer caracter es #
 function descomentarLinea() {
   buscar=`grep $1 $2`
@@ -267,6 +232,7 @@ function descomentarLinea() {
     done
   done
 }
+
 #Habilita o deshabilita el recovery mode
 function recoveryMode ()
 {
@@ -285,6 +251,7 @@ function recoveryMode ()
     ;;
   esac
 }
+
 ##Cambia la entrada por defecto.
 function entradaPorDefecto ()
 {
@@ -294,12 +261,6 @@ function entradaPorDefecto ()
   anadirLog "entrada por defecto" $1
 
 }
-
-################################################################################################
-
-#
-#Código Reyero
-#
 
 #Montamos la lista de las resoluciones disponibles
 function listaResoluciones() {
@@ -385,7 +346,7 @@ function imgfondo () {
 				echo "$variable\"$1\"" >> $archivo
 				codigoError=2
 				error $codigoError
-        anadirLog "imagen de fondo" $ruta
+        			anadirLog "imagen de fondo" $ruta
 			else
 				codigoError=5
 				error $codigoError
@@ -431,7 +392,7 @@ function color () {
 			fi
 			echo "$variable$color" >> $archivo
 			codigoError=2
-      anadirLog "$texto" $color
+      			anadirLog "$texto" $color
 			error $codigoError
 		fi
 	else
@@ -441,14 +402,10 @@ function color () {
 	fi
 }
 
-###############################################################################################################################################
-#
-#Código García
-#
-##MENU PRINCIPAL
+
+#Modificar perfil
 function perfilModificar() {
   #se abrira el menu principal para empezar a modificar
-  #¿¿¿QUÉ PERFIL???
   perfil=$1
   export perfil
   ./menu.sh

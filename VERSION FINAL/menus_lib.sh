@@ -1,19 +1,28 @@
 #!/bin/bash
 
-#VENTANAS DE SUBMENÚS
+#
+#Ventanas de submenús
+#
+
 
 #Cargamos la librería de funciones
-. /home/ddd/Escritorio/lib.sh
+. /bin/.customgrub2/lib.sh
 
-#ventana del menú de contraseñas
+#Función que crea las ventanas con los mensajes de error/información
+function mensaje() {
+	zenity $1 --text "$2"
+}
+
+#Ventana del menú de contraseñas
 function menuGestionContra(){  
-  #muestra la ventana del menú principal de contraseñas
+  #Muestra la ventana del menú principal de contraseñas
   menuContra=$(zenity --list --cancel-label=Atrás --text="Elija una opción:" --title="Gestión de contraseña" --hide-column="1" --width="400" --height="400" \
    --column="Valor" --column="Opciones" \
    1 "Crear contraseña" \
    2 "Modificar contraseña" \
    3 "Eliminar contraseña")
-  #se evalua si el usuario clica en aceptar o atras
+
+  #se evalúa si el usuario clica en aceptar o atrás
   if [ "$?" == 0 ]
     #si hace clic en aceptar
     then
@@ -93,28 +102,6 @@ function menuGestionContra(){
         menuGestionContra
       fi
       ;;
-      "3")
-      #evaluamos si existe o no una contraseña previamente
-      if [ $passExist -eq 1 ]
-        then
-        #muestra la ventana de nueva contraseña
-        eliminaContra=$(zenity --question --cancel-label=Atrás --title="Eliminar contraseña" \
-        --text="¿Confirma que desea eliminar la contraseña actual?")
-        #se evalua si el usuario clica en aceptar o atras
-        if [ "$?" == 0 ]
-          #si hace clic en aceptar, continua el proceso
-          then
-          #evaluamos si existe o no una contraseña previamente
-            eliminaContra
-        #si hace clic en atrás, vuelve al menú principal de contraseñas
-        else
-          menuGestionContra
-        fi
-      else
-        error 13
-        menuGestionContra
-      fi
-      ;;
     esac
   else
     error 3
@@ -123,12 +110,7 @@ function menuGestionContra(){
 fi
 }
 
-#Función ventana de mensaje
-function mensaje() {
-	zenity $1 --text "$2"
-}
-
-#Ventana del menú - Personalización
+#Ventana del menú de personalización
 function menuPersonalizar () {
   opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
     --column="Valor" --column="Seleccione una opción" \
@@ -138,6 +120,7 @@ function menuPersonalizar () {
 
 codError=$?
 
+#Si la opción no es vacía
 if [ "$opcion" != "" ]
   then
   #Dependiendo de la opción...
@@ -150,28 +133,30 @@ opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column=
 
 codError=$?
 
-if [ "$opcion" != "" ]
+	#Si la opción no es vacía
+	if [ "$opcion" != "" ]
  then
  case $opcion in
   1)
-echo "Ventana de selección de color"
-;;
-2)
-		                #Mostramos la ventana de selección de ficheros
-		                ruta=`zenity --file-selection`
+		#Mostramos la ventana de selección de color de fondo
+		echo "Ventana de selección de color"
+	;;
+	2)
+		#Mostramos la ventana de selección de ficheros
+		ruta=`zenity --file-selection`
 
-		                imgfondo $ruta
-                    ;;
-                  esac
-                else if [ $codError -eq 1 ]
-                 then
-                 menuPersonalizar
-               else
-                codigoError=3
-                error $codigoError
-              fi
-            fi
-            ;;
+		imgfondo $ruta
+		;;
+		esac
+		else if [ $codError -eq 1 ]
+		then
+			menuPersonalizar
+		else
+			codigoError=3
+			error $codigoError
+		fi
+		fi
+	;;
       2) #Mostramos el menú de Fuentes
 opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
   --column="Valor" --column="Seleccione una opción" \
@@ -180,40 +165,42 @@ opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column=
 
 codError=$?
 
-          if [ "$opcion" != "" ] #Si el usuario ha elegido una opción, mostramos el listado de colores
-            then					
-              #Mostramos una selección de colores
-              color=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija un color de resaltado" \
-                --column="Valor" --column="Seleccione un color" \
-                "yellow/dark-gray" \ "Amarillo / Gris oscuro" \
-                "white/black" \ "Blanco / Negro" \
-                "cyan/black" \ "Cian / Negro " \
-                "light-green/black" \ "Verde claro / Negro" \
-                "black/red" \ "Negro / Rojo" \
-                "yellow/blue" \ "Amarillo / Azul")
+      if [ "$opcion" != "" ] #Si el usuario ha elegido una opción, mostramos el listado de colores
+        then					
+          #Mostramos una selección de colores
+          color=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija un color de resaltado" \
+            --column="Valor" --column="Seleccione un color" \
+            "yellow/dark-gray" \ "Amarillo / Gris oscuro" \
+            "white/black" \ "Blanco / Negro" \
+            "cyan/black" \ "Cian / Negro " \
+            "light-green/black" \ "Verde claro / Negro" \
+            "black/red" \ "Negro / Rojo" \
+            "yellow/blue" \ "Amarillo / Azul")
 
-case $opcion in
-  1)
-color 1
-;;
-2)
-color 2
-;;
-*)
-codigoError=3
-error $codigoError
-;;
-esac
-else if [ $codError -eq 1 ]
- then
- menuPersonalizar
-else
-  codigoError=3
-  error $codigoError
-fi
-fi
-;;
+				#Dependiendo de la opción
+				case $opcion in
+				1)
+					color 1
+				;;
+				2)
+					color 2
+				;;
+				*)
+					codigoError=3
+					error $codigoError
+				;;
+				esac
+				else if [ $codError -eq 1 ]
+				 then
+				 	menuPersonalizar
+				else
+					codigoError=3
+					error $codigoError
+				fi
+				fi
+				;;
       3) #Mostramos el menú de resoluciones
+
           #Mostrar la lista de resoluciones disponibles
           listaRes=`listaResoluciones`
 
@@ -235,7 +222,7 @@ fi
 
  }
 
-#Ventana del menú - Configuración
+#Ventana del menú de configuración
 function menuConfiguracion () {
   ventanaConfiguracion=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" --hide-column="1" \
   1. "Visibilidad opcion recovery" \
@@ -246,7 +233,7 @@ function menuConfiguracion () {
   #Evaluamos la opcion elegida por el usuario.
   case $ventanaConfiguracion in
     "1.")
-      #Menú opcion recovery
+#Menú opcion recovery
       ventanaRecovery=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" \
       1. "Habilitar Recovery" \
       2. "Deshabilitar Recovery"`
@@ -308,13 +295,13 @@ function menuConfiguracion () {
           fi      
         ;;
         1)
-      	  ##Volver a la ventana ventana configuracion
+          ##Volver a la ventana ventana configuracion
           menuConfiguracion
         ;;
       esac
     ;;
     "3.")
-      #Menu timeout
+#Menu timeout
       ventanaTimeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="30" --max-value="60" --min-value="5" --step="5"`
       case $? in
         
@@ -356,14 +343,14 @@ case $opcionperfil in
     ;;
 
     "Modificar perfil")
-perfil=`ls /home/.grubcustom/profiles | zenity --list \
+perfil=`ls /home/.customgrub2/profiles | zenity --list \
 --column="Elige opcion de perfil"`
 perfilModificar $perfil
 ;;
 
 "Eliminar perfil")
-    #coje lista de directorios existentes del directorio profiles donde estan los perfiles
-    opcion=`ls /home/.grubcustom/profiles | zenity --list \
+    #coge lista de directorios existentes del directorio profiles donde estan los perfiles
+    opcion=`ls /home/.customgrub2/profiles | zenity --list \
     --column="Elige opcion de perfil"`
 	#al elegir uno se solicita confirmacion
 	zenity --question \
@@ -373,22 +360,20 @@ perfilModificar $perfil
   ;;  
   
   "Elegir perfil")
-    #coje lista de directorios existentes del directorio profiles donde estan los usuarios
-    opcion=`ls /home/.grubcustom/profiles | zenity --list \
+    #coge lista de directorios existentes del directorio profiles donde estan los usuarios
+    opcion=`ls /home/.customgrub2/profiles | zenity --list \
     --column="Elige opcion de perfil"`
-
-	#solicita confirmacion
-	zenity --question \
-	--text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
 	
-  perfilRestaurar
+	perfilElegir
+  
   ;;
   
   "Restaurar perfil")
     #solicita confirmacion
     zenity --question \
-    --text="¿Está seguro de que quiere restaurar el perfil seleccionado?"
-    perfilElegir
+    --text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
+
+		perfilRestaurar
     ;;
 
   esac
