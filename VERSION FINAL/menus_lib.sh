@@ -237,76 +237,96 @@ fi
 
 #Ventana del menú - Configuración
 function menuConfiguracion () {
-  ventana_configuracion=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" \
+  ventanaConfiguracion=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" --hide-column="1" \
   1. "Visibilidad opcion recovery" \
   2. "Entrada por defecto de GRUB2" \
   3. "Timeout"`
-  ventana_configuracion=`echo $ventana_configuracion | cut -d "|" -f 1`
-  case $ventana_configuracion in
+  #Separamos cogiendo el codigo del campo oculto (codigo), ya que, el programa devuelve valores como 1.|1
+  ventanaConfiguracion=`echo $ventanaConfiguracion | cut -d "|" -f 1`
+  #Evaluamos la opcion elegida por el usuario.
+  case $ventanaConfiguracion in
     "1.")
-ventana_recovery=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" \
-1. "Habilitar Recovery" \
-2. "Deshabilitar Recovery"`
-if [ $? -eq 0 ]
-  then
-  ventana_recovery=`echo $ventana_recovery | cut -d "|" -f 1`
-  if [ 'x'$ventana_recovery != 'x' ]
-    then
-    recovery_mode
-  else
-    echo "Debe de elegir una opcion!"
-  fi
-else
- menuConfiguracion
-fi
-;;
-"2.")
-long_entradas=`grep "menuentry '" /boot/grub/grub.cfg -c`
-contador=1
-opciones_entradas=`sed '150,190d' /boot/grub/grub.cfg | grep "menuentry '" | cut -d "(" -f 1 | tr -d ' '`
- for i in $opciones_entradas
- do
-   i=`echo $i | cut -d "'" -f2`
-   res_entrada=$res_entrada$contador". "$i" "
-   if [ $contador -eq "1" ]
-     then
-     let contador=$contador+2
-   else
-    let contador=$contador+1
-  fi
-done
-ventana_entrada_predeterminada=`zenity --list --column="Codigo" --cancel-label="Atrás" --column="Sistema operativo" --title="Elija una opcion" --hide-column="1" --height="300" --width="400" \
-$res_entrada`
-ok=$?
-res_entrada=""
-case $ok in
-  0)
-if [ 'x'$ventana_entrada_predeterminada != 'x' ]
-  then
-  ventana_entrada_predeterminada=`echo $ventana_entrada_predeterminada | cut -d "|" -f 1 | cut -d '.' -f 1`
-  entrada_por_defecto "$ventana_entrada_predeterminada"
-else
- codError=3
- error $codError
-fi      
-;;
-1)
-    	##Volver a la ventana ventana configuracion
-      menuConfiguracion
-      ;;
-    esac
+      #Menú opcion recovery
+      ventanaRecovery=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" \
+      1. "Habilitar Recovery" \
+      2. "Deshabilitar Recovery"`
+      #Si ha elegido una opcion y ha dado a aceptar
+      if [ $? -eq 0 ]
+      then
+        #evaluar la opcion elegida por el usuario.
+         ventanaRecovery=`echo $ventanaRecovery | cut -d "|" -f 1`
+         #si ha elegido una
+        if [ 'x'$ventanaRecovery != 'x' ]
+        then
+          recoveryMode
+        fi
+        #Si ha dado a cancelar vuelve al menu de configuracion
+        else
+          menuConfiguracion
+      fi
+    ;;
+    #Menu entrada por defecto
+    "2.")
+      #Cuenta cuantos sistemas operativos se muestran en lista de grub
+      longEntradas=`grep "menuentry '" /boot/grub/grub.cfg -c`
+      contador=1
+      #se busca menuentry excluyendo aquellas lineas en las cuales forman parte de un submenú
+      opcionesEntradas=`sed '150,190d' /boot/grub/grub.cfg | grep "menuentry '" | cut -d "(" -f 1 | tr -d ' '`
+      for i in $opcionesEntradas
+      do
+        #Cogemos el nombre de cada opcion que viene en la lista de grub y las metemos en una variable
+        i=`echo $i | cut -d "'" -f2`
+        resEntrada=$resEntrada$contador". "$i" "
+        #Para que no salga "Opciones avanzadas" haremos un salto mas sumando el contador a +1 cuando valga 1
+        if [ $contador -eq "1" ]
+        then
+          let contador=$contador+2
+          else
+            #En caso de que el contador no valga 1 sumara 1 mas
+            let contador=$contador+1
+        fi
+      done
+      #Mostramos los diferentes sistemas operativos que el usuario puede elegir mediante una lista.
+      ventanaEntradaPredeterminada=`zenity --list --column="Codigo" --cancel-label="Atrás" --column="Sistema operativo" --hide-column="1" --title="Elija una opcion" --hide-column="1" --height="300" --width="400" \
+      $resEntrada`
+      #Controlamos el error que devuelve en una variable.
+      ok=$?
+      #Limpiamos la variable
+      resEntrada=""
+      #Evaluamos el codigo de error de salida
+      case $ok in
+        0)
+          #Limpiamos codido de error y lo pasamos a funcion de sustitucion de entrada predeterminada
+          if [ 'x'$ventanaEntradaPredeterminada != 'x' ]
+          then
+            ventanaEntradaPredeterminada=`echo $ventanaEntradaPredeterminada | cut -d "|" -f 1 | cut -d '.' -f 1`
+            entradaPorDefecto "$ventanaEntradaPredeterminada"
+            else
+              ##En el caso de que no se elija opcion error vale 3 y se pasará como parametro a funcion error
+              codError=3
+              error $codError
+          fi      
+        ;;
+        1)
+      	  ##Volver a la ventana ventana configuracion
+          menuConfiguracion
+        ;;
+      esac
     ;;
     "3.")
-ventana_timeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="30" --max-value="60" --min-value="5" --step="5"`
-case $? in
- 0)
-timeout $ventana_timeout
-;;
-1)
-      ##Volver a la ventana ventana configuracion
-      menuConfiguracion
-      ;;
-    esac
+      #Menu timeout
+      ventanaTimeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="30" --max-value="60" --min-value="5" --step="5"`
+      case $? in
+        
+        0)
+          #Si da a aceptar procede a cambiar el valor en grub
+          timeout $ventanaTimeout
+        ;;
+        1)
+          ##Volver a la ventana ventana configuracion
+          menuConfiguracion
+        ;;
+      esac
     ;;
   esac
 }
@@ -332,13 +352,13 @@ case $opcionperfil in
     --title="Añadir un perfil nuevo" \
     --text="Escriba el nombre del perfil nuevo:"`
 
-    perfil_crear
+    perfilCrear
     ;;
 
     "Modificar perfil")
 perfil=`ls /home/.grubcustom/profiles | zenity --list \
 --column="Elige opcion de perfil"`
-perfil_modificar $perfil
+perfilModificar $perfil
 ;;
 
 "Eliminar perfil")
@@ -349,7 +369,7 @@ perfil_modificar $perfil
 	zenity --question \
 	--text="¿Está seguro de que quiere eliminar?"
 	
-  perfil_eliminar
+  perfilEliminar
   ;;  
   
   "Elegir perfil")
@@ -361,14 +381,14 @@ perfil_modificar $perfil
 	zenity --question \
 	--text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
 	
-  perfil_restaurar
+  perfilRestaurar
   ;;
   
   "Restaurar perfil")
     #solicita confirmacion
     zenity --question \
     --text="¿Está seguro de que quiere restaurar el perfil seleccionado?"
-    perfil_elegir
+    perfilElegir
     ;;
 
   esac

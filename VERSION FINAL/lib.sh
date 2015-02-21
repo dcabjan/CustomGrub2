@@ -200,7 +200,7 @@ calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error e
 }
 
 ##reemplaza valores de variables ya definidas a partir de un string $1 y un archivo $2
-function busca_reemplaza() {
+function buscaReemplaza() {
   limpiar=`echo "$1" | tr -d " "`
   test=`grep "$limpiar" "$2" | tr -d " " | cut -d "=" -f 2`
   sed -i "s/$test/$3/g" "$2"
@@ -209,11 +209,11 @@ function busca_reemplaza() {
 function timeout() {
   archivo="/etc/default/grub"
   string="GRUB_TIMEOUT="
-  busca_reemplaza "$string" $archivo "$1"
+  buscaReemplaza "$string" $archivo "$1"
   anadirLog "timeout" $1
 }
 ##Comenta lineas añadiendo un #
-function comentar_linea() {
+function comentarLinea() {
   buscar=`grep $1 $2`
 
   for i in $buscar
@@ -226,16 +226,16 @@ function comentar_linea() {
       then
 		echo "Ya está comentado!"
 	  else
-        anadir_almohadilla="#"$buscar
-        sed -i "s/$buscar/$anadir_almohadilla/g" $2
-        ventana_desc_ok=`zenity --info --text="Se ha deshabilitado correctamente."`
+        anadirAlmohadilla="#"$buscar
+        sed -i "s/$buscar/$anadirAlmohadilla/g" $2
+        ventanaDescOk=`zenity --info --text="Se ha deshabilitado correctamente."`
       fi
       let contador=$contador+1
     done
   done
 }
 #Descomenta la linea comprobando si el primer caracter es #
-function descomentar_linea() {
+function descomentarLinea() {
   buscar=`grep $1 $2`
   for i in $buscar
   do
@@ -247,9 +247,9 @@ function descomentar_linea() {
       then
         echo "¡Ya está descomentado!"
         else
-      		quitar_almoadilla=`echo $buscar | sed 's/^.//' | tr -d ' '`
-      		sed -i "s/$buscar/$quitar_almoadilla/g" $2	
-      		ventana_desc_ok=`zenity --info --text="Se ha habilitado correctamente."`
+      		quitarAlmoadilla=`echo $buscar | sed 's/^.//' | tr -d ' '`
+      		sed -i "s/$buscar/$quitarAlmoadilla/g" $2	
+      		ventanaDescOk=`zenity --info --text="Se ha habilitado correctamente."`
       fi
       let contador=$contador+1
 
@@ -257,17 +257,17 @@ function descomentar_linea() {
   done
 }
 #Habilita o deshabilita el recovery mode
-function recovery_mode ()
+function recoveryMode ()
 {
   archivo="/etc/default/grub"
   string="GRUB_DISABLE_RECOVERY="
-  case $ventana_recovery in
+  case $ventanaRecovery in
     "1.") ##Caso en el que se elija la opcion "Habilitar recovery"
-      descomentar_linea $string $archivo
+      descomentarLinea $string $archivo
       anadirLog "recovery mode" "Habilitado"
     ;;    
     "2.") ##Caso en el que se elija "Deshabilitar Recovery"
-      comentar_linea $string $archivo
+      comentarLinea $string $archivo
       anadirLog "recovery mode" "Deshabilitado"
     ;;
     *)
@@ -275,11 +275,11 @@ function recovery_mode ()
   esac
 }
 ##Cambia la entrada por defecto.
-function entrada_por_defecto ()
+function entradaPorDefecto ()
 {
   archivo="/etc/default/grub"
   string="GRUB_DEFAULT="
-  busca_reemplaza $string $archivo "$1"
+  buscaReemplaza $string $archivo "$1"
   anadirLog "entrada por defecto" $1
 
 }
@@ -435,7 +435,7 @@ function color () {
 #Código García
 #
 ##MENU PRINCIPAL
-function perfil_modificar() {
+function perfilModificar() {
   #se abrira el menu principal para empezar a modificar
   #¿¿¿QUÉ PERFIL???
   perfil=$1
@@ -443,7 +443,7 @@ function perfil_modificar() {
   ./menu.sh
 }
 
-function perfil_eliminar() {
+function perfilEliminar() {
   #elimina directorio de perfil
   ##EVALUAR CODIGOS DE ERRORES FUERA
   if [ $? = 0 ]
@@ -456,7 +456,7 @@ function perfil_eliminar() {
 	./perfiles.sh
   fi
 }
-function perfil_crear() {
+function perfilCrear() {
   #crea directorio de perfil si ha sido introducido
   if [ $perfil ]
   then
@@ -468,7 +468,7 @@ function perfil_crear() {
 	./perfiles.sh
   fi
 }
-function perfil_elegir() {
+function perfilElegir() {
   
   if [ $? = 0 ]
   then
@@ -480,7 +480,7 @@ function perfil_elegir() {
 	./perfiles.sh
   fi	
 }
-function perfil_restaurar() {
+function perfilRestaurar() {
   
   if [ $? = 0 ]
   then

@@ -1,4 +1,4 @@
-function busca_reemplaza() {
+function buscaReemplaza() {
   limpiar=`echo "$1" | tr -d " "`
   test=`grep "$limpiar" "$2" | tr -d " " | cut -d "=" -f 2`
   sed -i "s/$test/$3/g" "$2"
@@ -7,7 +7,7 @@ function busca_reemplaza() {
 function timeout() {
   archivo="/etc/default/grub"
   string="GRUB_TIMEOUT="
-  busca_reemplaza "$string" $archivo "$1"
+  buscaReemplaza "$string" $archivo "$1"
 }
 
 function comentar_linea() {
@@ -25,14 +25,14 @@ function comentar_linea() {
 	else
 	  anadir_almoadilla="#"$buscar
 	  sed -i "s/$buscar/$anadir_almoadilla/g" $2
-	  ventana_desc_ok=`zenity --info --text="Se ha deshabilitado correctamente."`
+	  ventanaDescOk=`zenity --info --text="Se ha deshabilitado correctamente."`
       fi
       let contador=$contador+1
     done
   done
 }
 
-function descomentar_linea() {
+function desdescomentarLinea() {
 buscar=`grep $1 $2`
 for i in $buscar
 do
@@ -44,22 +44,22 @@ do
     then
       echo "Ya está descomentado!"
       else
-	quitar_almoadilla=`echo $buscar | sed 's/^.//' | tr -d ' '`
-	sed -i "s/$buscar/$quitar_almoadilla/g" $2	
-	ventana_desc_ok=`zenity --info --text="Se ha habilitado correctamente."`
+	quitarAlmoadilla=`echo $buscar | sed 's/^.//' | tr -d ' '`
+	sed -i "s/$buscar/$quitarAlmoadilla/g" $2	
+	ventanaDescOk=`zenity --info --text="Se ha habilitado correctamente."`
     fi
     let contador=$contador+1
       
   done
 done
 }
-function recovery_mode ()
+function recoveryMode ()
 {
   archivo="/etc/default/grub"
   string="GRUB_DISABLE_RECOVERY="
-  case $ventana_recovery in
+  case $ventanaRecovery in
     "1.") ##Caso en el que se elija la opcion "Habilitar recovery"
-      descomentar_linea $string $archivo
+      desdescomentarLinea $string $archivo
     ;;    
     "2.") ##Caso en el que se elija "Deshabilitar Recovery"
       comentar_linea $string $archivo
@@ -69,11 +69,11 @@ function recovery_mode ()
   esac
 }
 
-function entrada_por_defecto ()
+function entradaPorDefecto ()
 {
   archivo="/etc/default/grub"
   string="GRUB_DEFAULT="
-  busca_reemplaza $string $archivo "$1"
+  buscaReemplaza $string $archivo "$1"
 
 }
 

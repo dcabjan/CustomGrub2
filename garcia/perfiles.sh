@@ -19,11 +19,11 @@ case $opcionperfil in
 	--title="Añadir un perfil nuevo" \
 	--text="Escriba el nombre del perfil nuevo:"`
 	
-    perfil_crear
+    perfilCrear
   ;;
   
   "Modificar perfil")
-    perfil_modificar
+    perfilModificar
   ;;
   
   "Eliminar perfil")
@@ -34,7 +34,7 @@ case $opcionperfil in
 	zenity --question \
 	--text="¿Está seguro de que quiere eliminar?"
 	
-    perfil_eliminar
+    perfilEliminar
   ;;  
   
   "Restaurar perfil")
@@ -46,7 +46,7 @@ case $opcionperfil in
 	zenity --question \
 	--text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
 	
-    perfil_restaurar
+    perfilRestaurar
   ;;
   
   "Elegir perfil")
@@ -54,7 +54,7 @@ case $opcionperfil in
 	zenity --question \
 	--text="¿Está seguro de que quiere restaurar el perfil seleccionado?"
 	
-    perfil_elegir
+    perfilElegir
   ;;
 
 esac

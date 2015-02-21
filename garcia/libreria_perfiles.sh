@@ -1,11 +1,11 @@
-function perfil_modificar() {
+function perfilModificar() {
   
   #se abrira el menu principal para empezar a modificar
   ./menu.sh
 
 }
 
-function perfil_eliminar() {
+function perfilEliminar() {
 
   #elimina directorio de perfil
   if [ $? = 0 ]
@@ -20,7 +20,7 @@ function perfil_eliminar() {
 
 }
 
-function perfil_crear() {
+function perfilCrear() {
 
   #crea directorio de perfil si ha sido introducido
   if [ $perfil ]
@@ -35,7 +35,7 @@ function perfil_crear() {
 
 }
 
-function perfil_restaurar() {
+function perfilRestaurar() {
   
   if [ $? = 0 ]
   then
@@ -50,7 +50,7 @@ function perfil_restaurar() {
 
   
 
-function perfil_elegir() {
+function perfilElegir() {
   
   if [ $? = 0 ]
   then
