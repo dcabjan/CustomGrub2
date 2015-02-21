@@ -150,10 +150,10 @@ function eliminaContra(){
 		#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
 		#mostramos mensaje de que la contraseña se ha eliminado correctamente
 		error 6
-		menuGestionContraseña
+		menuGestionContra
 	else
 		error 15
-		menuGestionContraseña
+		menuGestionContra
 	fi
 }
 

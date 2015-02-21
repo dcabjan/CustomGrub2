@@ -21,7 +21,6 @@ function menuGestionContra(){
    1 "Crear contraseña" \
    2 "Modificar contraseña" \
    3 "Eliminar contraseña")
-
   #se evalúa si el usuario clica en aceptar o atrás
   if [ "$?" == 0 ]
     #si hace clic en aceptar
@@ -97,6 +96,28 @@ function menuGestionContra(){
           menuGestionContra
         fi
       #si no existe una contraseña mostramos un mensaje de error
+      else
+        error 13
+        menuGestionContra
+      fi
+      ;;
+      "3")
+      #evaluamos si existe o no una contraseña previamente
+      if [ $passExist -eq 1 ]
+        then
+        #muestra la ventana de nueva contraseña
+        eliminaContra=$(zenity --question --cancel-label=Atrás --title="Eliminar contraseña" \
+        --text="¿Confirma que desea eliminar la contraseña actual?")
+        #se evalua si el usuario clica en aceptar o atras
+        if [ "$?" == 0 ]
+          #si hace clic en aceptar, continua el proceso
+          then
+          #evaluamos si existe o no una contraseña previamente
+            eliminaContra
+        #si hace clic en atrás, vuelve al menú principal de contraseñas
+        else
+          menuGestionContra
+        fi
       else
         error 13
         menuGestionContra
