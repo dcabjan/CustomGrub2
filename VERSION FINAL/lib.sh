@@ -198,6 +198,17 @@ calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error e
 
 	mensaje $label "$error"
 }
+#Realiza un guardado de los cambios realizados
+function guardarCambios () {
+  #Copiar los archivos de GRUB a la carpeta del perfil del usuario
+  cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/$perfil
+  cp /etc/default/grub /home/.customgrub2/profiles/$perfil
+  cp /boot/grub2/grub.cfg /home/.customgrub2/profiles/$perfil
+  
+  #Actualizar el GRUB
+  update-grub2                
+  ##Añadir a archivo log los cambios realizados. 
+}
 
 ##reemplaza valores de variables ya definidas a partir de un string $1 y un archivo $2
 function buscaReemplaza() {

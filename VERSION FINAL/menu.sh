@@ -41,13 +41,15 @@ do
               echo "Ventana de registro de actividad"
           ;;	
           5)
-          	#Copiar los archivos de GRUB a la carpeta del perfil del usuario
-            cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/$perfil
-			cp /etc/default/grub /home/.customgrub2/profiles/$perfil
-			cp /boot/grub2/grub.cfg /home/.customgrub2/profiles/$perfil
-            #Actualizar el GRUB
-            update-grub2                
-            ##Añadir a archivo log los cambios realizados. 
+            #Ventana confirmacion de guardar cambios
+          	ventanaConfirm=(`zenity --question --text "¿Esta usted seguro que desea guardar los cambios realizados?"`)
+            if [ $? -eq 0 ]
+            then
+              guardarCambios
+            else
+              errorCode=3
+              error $errorCode
+            fi
           ;;
           6)
           	bucle=false
