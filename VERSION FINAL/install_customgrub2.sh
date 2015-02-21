@@ -9,7 +9,7 @@ else
 	mkdir -p /home/.customgrub2/profiles/.default
 	mkdir /home/.customgrub2/logs
 	mkdir /bin/.customgrub2
-	
+
 	#Copia de los ficheros de GRUB que son objeto de modificación en la aplicación, a modo de "perfil por defecto"
 	cp /boot/grub/grub.cfg /etc/default/grub /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/.default
 
@@ -23,7 +23,7 @@ else
 			rutaFinal=$rutaFinal"/"$x
 		fi		
 	done
-	
+
 	#Copia los ficheros de aplicación del instalador hasta la carpeta donde operarán
 	cp $rutaFinal/files/* /bin/.customgrub2
 

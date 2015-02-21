@@ -133,209 +133,208 @@ fi
 
 #Ventana del menú de personalización
 function menuPersonalizar () {
-  opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
+	opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
     --column="Valor" --column="Seleccione una opción" \
     "1" \ "Fondo de pantalla" \
     "2" \ "Fuentes" \
     "3" \ "Resolución")
 
-codError=$?
-
-#Si la opción no es vacía
-if [ "$opcion" != "" ]
-  then
-  #Dependiendo de la opción...
-  case $opcion in
-      1) #Mostramos el menú de Fondo de pantalla
-opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
-  --column="Valor" --column="Seleccione una opción" \
-  "1" \ "Seleccionar un color" \
-  "2" \ "Seleccionar una imagen")
-
-codError=$?
+	codError=$?
 
 	#Si la opción no es vacía
 	if [ "$opcion" != "" ]
- then
- case $opcion in
-  1)
-		#Mostramos la ventana de selección de color de fondo
-		echo "Ventana de selección de color"
-	;;
-	2)
-		#Mostramos la ventana de selección de ficheros
-		ruta=`zenity --file-selection`
+	  then
+	  #Dependiendo de la opción...
+	  case $opcion in
+		  1) #Mostramos el menú de Fondo de pantalla
+			opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
+			  --column="Valor" --column="Seleccione una opción" \
+			  "1" \ "Seleccionar un color" \
+			  "2" \ "Seleccionar una imagen")
 
-		imgfondo $ruta
-		;;
-		esac
-		else if [ $codError -eq 1 ]
-		then
-			menuPersonalizar
-		else
-			codigoError=3
-			error $codigoError
-		fi
-		fi
-	;;
-      2) #Mostramos el menú de Fuentes
-opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
-  --column="Valor" --column="Seleccione una opción" \
-  "1" \ "Color de entrada" \
-  "2" \ "Color de entrada resaltada")
+			codError=$?
 
-codError=$?
-
-      if [ "$opcion" != "" ] #Si el usuario ha elegido una opción, mostramos el listado de colores
-        then					
-          #Mostramos una selección de colores
-          color=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija un color de resaltado" \
-            --column="Valor" --column="Seleccione un color" \
-            "yellow/dark-gray" \ "Amarillo / Gris oscuro" \
-            "white/black" \ "Blanco / Negro" \
-            "cyan/black" \ "Cian / Negro " \
-            "light-green/black" \ "Verde claro / Negro" \
-            "black/red" \ "Negro / Rojo" \
-            "yellow/blue" \ "Amarillo / Azul")
-
-				#Dependiendo de la opción
+			#Si la opción no es vacía
+			if [ "$opcion" != "" ]
+			then
 				case $opcion in
 				1)
-					color 1
+					#Mostramos la ventana de selección de color de fondo
+					echo "Ventana de selección de color"
 				;;
 				2)
-					color 2
-				;;
-				*)
-					codigoError=3
-					error $codigoError
+					#Mostramos la ventana de selección de ficheros
+					ruta=`zenity --file-selection`
+
+					imgfondo $ruta
 				;;
 				esac
-				else if [ $codError -eq 1 ]
-				 then
-				 	menuPersonalizar
+			else if [ $codError -eq 1 ]
+				then
+					menuPersonalizar
 				else
 					codigoError=3
 					error $codigoError
 				fi
+			fi
+			;;
+			2) #Mostramos el menú de Fuentes
+				opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
+				--column="Valor" --column="Seleccione una opción" \
+				"1" \ "Color de entrada" \
+				"2" \ "Color de entrada resaltada")
+
+				codError=$?
+
+				if [ "$opcion" != "" ] #Si el usuario ha elegido una opción, mostramos el listado de colores
+				then					
+				  #Mostramos una selección de colores
+				  color=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija un color de resaltado" \
+				    --column="Valor" --column="Seleccione un color" \
+				    "yellow/dark-gray" \ "Amarillo / Gris oscuro" \
+				    "white/black" \ "Blanco / Negro" \
+				    "cyan/black" \ "Cian / Negro " \
+				    "light-green/black" \ "Verde claro / Negro" \
+				    "black/red" \ "Negro / Rojo" \
+				    "yellow/blue" \ "Amarillo / Azul")
+
+					#Dependiendo de la opción
+					case $opcion in
+					1)
+						color 1
+					;;
+					2)
+						color 2
+					;;
+					*)
+						codigoError=3
+						error $codigoError
+					;;
+					esac
+				else if [ $codError -eq 1 ]
+					then
+					 	menuPersonalizar
+					else
+						codigoError=3
+						error $codigoError
+					fi
 				fi
-				;;
-      3) #Mostramos el menú de resoluciones
+			;;
+			3) #Mostramos el menú de resoluciones
 
-          #Mostrar la lista de resoluciones disponibles
-          listaRes=`listaResoluciones`
+		      #Mostrar la lista de resoluciones disponibles
+		      listaRes=`listaResoluciones`
 
-          #Se muestra al usuario una lista con todas las resoluciones disponibles
-          opcion=`zenity --list --cancel-label="Atrás" --height="300" --width="400" --column "Resoluciones" $listaRes`
+		      #Se muestra al usuario una lista con todas las resoluciones disponibles
+		      opcion=`zenity --list --cancel-label="Atrás" --height="300" --width="400" --column "Resoluciones" $listaRes`
 
-          resolucion
+		      resolucion
 
-          ;;
-        esac
-      else if [ $codError -eq 1 ]
-        then
-        return
-      else
-       codigoError=3
-       error $codigoError
-     fi
-   fi
-
- }
+			;;
+		esac
+	else if [ $codError -eq 1 ] #Si el código de error es 1, el usuario ha clicado en "Atrás"
+		then
+			return
+		else #Si ninguna de las anteriores es cierta, el usuario no ha seleccionado ninguna opción y ha pulsado en "Aceptar", por lo que mostramos un error
+			codigoError=3
+			error $codigoError
+		fi
+	fi
+}
 
 #Ventana del menú de configuración
 function menuConfiguracion () {
-  ventanaConfiguracion=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" --hide-column="1" \
-  1. "Visibilidad opcion recovery" \
-  2. "Entrada por defecto de GRUB2" \
-  3. "Timeout"`
-  #Separamos cogiendo el codigo del campo oculto (codigo), ya que, el programa devuelve valores como 1.|1
-  ventanaConfiguracion=`echo $ventanaConfiguracion | cut -d "|" -f 1`
-  #Evaluamos la opcion elegida por el usuario.
-  case $ventanaConfiguracion in
-    "1.")
-#Menú opcion recovery
-      ventanaRecovery=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" \
-      1. "Habilitar Recovery" \
-      2. "Deshabilitar Recovery"`
-      #Si ha elegido una opcion y ha dado a aceptar
-      if [ $? -eq 0 ]
-      then
-        #evaluar la opcion elegida por el usuario.
-         ventanaRecovery=`echo $ventanaRecovery | cut -d "|" -f 1`
-         #si ha elegido una
-        if [ 'x'$ventanaRecovery != 'x' ]
-        then
-          recoveryMode
-        fi
-        #Si ha dado a cancelar vuelve al menu de configuracion
-        else
-          menuConfiguracion
-      fi
-    ;;
+	ventanaConfiguracion=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" --hide-column="1" \
+	1. "Visibilidad opcion recovery" \
+	2. "Entrada por defecto de GRUB2" \
+	3. "Timeout"`
+	
+	#Separamos cogiendo el codigo del campo oculto (codigo), ya que, el programa devuelve valores como 1.|1
+	ventanaConfiguracion=`echo $ventanaConfiguracion | cut -d "|" -f 1`
+	#Evaluamos la opcion elegida por el usuario.
+	case $ventanaConfiguracion in
+	"1.")
+		#Menú opcion recovery
+		ventanaRecovery=`zenity --list --print-column="1" --cancel-label="Atrás" --title="Eliga una opcion" --column="codigo" --column="Nombre" --height="300" --width="400" --hide-column="1" \
+		1. "Habilitar Recovery" \
+		2. "Deshabilitar Recovery"`
+		#Si ha elegido una opcion y ha dado a aceptar
+		if [ $? -eq 0 ]
+		then
+			#evaluar la opcion elegida por el usuario.
+			ventanaRecovery=`echo $ventanaRecovery | cut -d "|" -f 1`
+			#si ha elegido una
+			if [ 'x'$ventanaRecovery != 'x' ]
+			then
+			  recoveryMode
+			fi
+		#Si ha dado a cancelar vuelve al menu de configuracion
+		else
+		  menuConfiguracion
+		fi
+	;;
     #Menu entrada por defecto
-    "2.")
-      #Cuenta cuantos sistemas operativos se muestran en lista de grub
-      longEntradas=`grep "menuentry '" /boot/grub/grub.cfg -c`
-      contador=1
-      #se busca menuentry excluyendo aquellas lineas en las cuales forman parte de un submenú
-      opcionesEntradas=`sed '150,190d' /boot/grub/grub.cfg | grep "menuentry '" | cut -d "(" -f 1 | tr -d ' '`
-      for i in $opcionesEntradas
-      do
-        #Cogemos el nombre de cada opcion que viene en la lista de grub y las metemos en una variable
-        i=`echo $i | cut -d "'" -f2`
-        resEntrada=$resEntrada$contador". "$i" "
-        #Para que no salga "Opciones avanzadas" haremos un salto mas sumando el contador a +1 cuando valga 1
-        if [ $contador -eq "1" ]
-        then
-          let contador=$contador+2
-          else
-            #En caso de que el contador no valga 1 sumara 1 mas
-            let contador=$contador+1
-        fi
-      done
-      #Mostramos los diferentes sistemas operativos que el usuario puede elegir mediante una lista.
-      ventanaEntradaPredeterminada=`zenity --list --column="Codigo" --cancel-label="Atrás" --column="Sistema operativo" --hide-column="1" --title="Elija una opcion" --hide-column="1" --height="300" --width="400" \
-      $resEntrada`
-      #Controlamos el error que devuelve en una variable.
-      ok=$?
-      #Limpiamos la variable
-      resEntrada=""
-      #Evaluamos el codigo de error de salida
-      case $ok in
-        0)
-          #Limpiamos codido de error y lo pasamos a funcion de sustitucion de entrada predeterminada
-          if [ 'x'$ventanaEntradaPredeterminada != 'x' ]
-          then
-            ventanaEntradaPredeterminada=`echo $ventanaEntradaPredeterminada | cut -d "|" -f 1 | cut -d '.' -f 1`
-            entradaPorDefecto "$ventanaEntradaPredeterminada"
-            else
-              ##En el caso de que no se elija opcion error vale 3 y se pasará como parametro a funcion error
-              codError=3
-              error $codError
-          fi      
-        ;;
-        1)
-          ##Volver a la ventana ventana configuracion
-          menuConfiguracion
-        ;;
-      esac
+	"2.")
+		#Cuenta cuantos sistemas operativos se muestran en lista de grub
+		longEntradas=`grep "menuentry '" /boot/grub/grub.cfg -c`
+		contador=1
+		#se busca menuentry excluyendo aquellas lineas en las cuales forman parte de un submenú
+		opcionesEntradas=`sed '150,190d' /boot/grub/grub.cfg | grep "menuentry '" | cut -d "(" -f 1 | tr -d ' '`
+		for i in $opcionesEntradas
+		do
+			#Cogemos el nombre de cada opcion que viene en la lista de grub y las metemos en una variable
+			i=`echo $i | cut -d "'" -f2`
+			resEntrada=$resEntrada$contador". "$i" "
+			#Para que no salga "Opciones avanzadas" haremos un salto mas sumando el contador a +1 cuando valga 1
+			if [ $contador -eq "1" ]
+			then
+				let contador=$contador+2
+			else
+				#En caso de que el contador no valga 1 sumara 1 mas
+				let contador=$contador+1
+			fi
+		done
+		#Mostramos los diferentes sistemas operativos que el usuario puede elegir mediante una lista.
+		ventanaEntradaPredeterminada=`zenity --list --column="Codigo" --cancel-label="Atrás" --column="Sistema operativo" --hide-column="1" --title="Elija una opcion" --hide-column="1" --height="300" --width="400" \
+		$resEntrada`
+		#Controlamos el error que devuelve en una variable.
+		ok=$?
+		#Limpiamos la variable
+		resEntrada=""
+		#Evaluamos el codigo de error de salida
+		case $ok in
+		0)
+			#Limpiamos codido de error y lo pasamos a funcion de sustitucion de entrada predeterminada
+			if [ 'x'$ventanaEntradaPredeterminada != 'x' ]
+			then
+				ventanaEntradaPredeterminada=`echo $ventanaEntradaPredeterminada | cut -d "|" -f 1 | cut -d '.' -f 1`
+				entradaPorDefecto "$ventanaEntradaPredeterminada"
+			else
+				##En el caso de que no se elija opcion error vale 3 y se pasará como parametro a funcion error
+				codError=3
+				error $codError
+			fi      
+		;;
+		1)
+			##Volver a la ventana ventana configuracion
+			menuConfiguracion
+		;;
+		esac
     ;;
-    "3.")
-#Menu timeout
-      ventanaTimeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="30" --max-value="60" --min-value="5" --step="5"`
-      case $? in
-        
-        0)
-          #Si da a aceptar procede a cambiar el valor en grub
-          timeout $ventanaTimeout
-        ;;
-        1)
-          ##Volver a la ventana ventana configuracion
-          menuConfiguracion
-        ;;
-      esac
-    ;;
+	"3.")
+		#Menu timeout
+		ventanaTimeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="30" --max-value="60" --min-value="5" --step="5"`
+		case $? in
+		0)
+			#Si da a aceptar procede a cambiar el valor en grub
+			timeout $ventanaTimeout
+		;;
+		1)
+			##Volver a la ventana ventana configuracion
+			menuConfiguracion
+		;;
+		esac
+	;;
   esac
 }
 

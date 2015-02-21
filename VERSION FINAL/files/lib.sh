@@ -28,7 +28,7 @@ function guardarCambios () {
   #Copiar los archivos de GRUB a la carpeta del perfil del usuario
   cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/$perfil
   cp /etc/default/grub /home/.customgrub2/profiles/$perfil
-  cp /boot/grub2/grub.cfg /home/.customgrub2/profiles/$perfil
+  cp /boot/grub/grub.cfg /home/.customgrub2/profiles/$perfil
   
   #Actualizar el GRUB
   update-grub2                
@@ -184,7 +184,7 @@ function timeout() {
   archivo="/etc/default/grub"
   string="GRUB_TIMEOUT="
   buscaReemplaza "$string" $archivo "$1"
-  anadirLog "timeout" $1
+  #anadirLog "timeout" $1
 }
 
 ##Comenta lineas añadiendo un #
@@ -197,10 +197,8 @@ function comentarLinea() {
     while [ $contador -ne 2 ]
     do
       caracter=`expr substr $buscar $contador 1`
-      if [ $caracter = "#" ]
+      if [ $caracter != "#" ]
       then
-		echo "Ya está comentado!"
-	  else
         anadirAlmohadilla="#"$buscar
         sed -i "s/$buscar/$anadirAlmohadilla/g" $2
         ventanaDescOk=`zenity --info --text="Se ha deshabilitado correctamente."`
@@ -219,47 +217,39 @@ function descomentarLinea() {
     while [ $contador -ne 2 ]
     do
       caracter=`expr substr $buscar $contador 1`
-      if [ $caracter != "#" ]
+      if [ $caracter = "#" ]
       then
-        echo "¡Ya está descomentado!"
-        else
-      		quitarAlmoadilla=`echo $buscar | sed 's/^.//' | tr -d ' '`
+       		quitarAlmoadilla=`echo $buscar | sed 's/^.//' | tr -d ' '`
       		sed -i "s/$buscar/$quitarAlmoadilla/g" $2	
       		ventanaDescOk=`zenity --info --text="Se ha habilitado correctamente."`
       fi
       let contador=$contador+1
-
     done
   done
 }
 
 #Habilita o deshabilita el recovery mode
-function recoveryMode ()
-{
+function recoveryMode () {
   archivo="/etc/default/grub"
   string="GRUB_DISABLE_RECOVERY="
   case $ventanaRecovery in
     "1.") ##Caso en el que se elija la opcion "Habilitar recovery"
       descomentarLinea $string $archivo
-      anadirLog "recovery mode" "Habilitado"
+      #anadirLog "recovery mode" "Habilitado"
     ;;    
     "2.") ##Caso en el que se elija "Deshabilitar Recovery"
       comentarLinea $string $archivo
-      anadirLog "recovery mode" "Deshabilitado"
-    ;;
-    *)
+      #anadirLog "recovery mode" "Deshabilitado"
     ;;
   esac
 }
 
 ##Cambia la entrada por defecto.
-function entradaPorDefecto ()
-{
+function entradaPorDefecto () {
   archivo="/etc/default/grub"
   string="GRUB_DEFAULT="
   buscaReemplaza $string $archivo "$1"
-  anadirLog "entrada por defecto" $1
-
+  #anadirLog "entrada por defecto" $1
 }
 
 #Montamos la lista de las resoluciones disponibles
@@ -302,16 +292,15 @@ function resolucion () {
 					quitarComentario=`echo $buscarLinea | sed 's/^.//' | tr -d ' '`
 					sed -i "s/$buscarLinea/$quitarComentario/g" $archivo	
 				fi
-			let contador=$contador+1
+				let contador=$contador+1
 			done
+
 			codigoError=2
 			error $codigoError
-      anadirLog "resolucion" $opcion
+			#anadirLog "resolucion" $opcion
 		fi
 	else
-	codigoError=1
-	error $codigoError
-	menuPersonalizar
+		menuPersonalizar
 	fi
 }
 
@@ -346,15 +335,13 @@ function imgfondo () {
 				echo "$variable\"$1\"" >> $archivo
 				codigoError=2
 				error $codigoError
-        			anadirLog "imagen de fondo" $ruta
+				#anadirLog "imagen de fondo" $ruta
 			else
 				codigoError=5
 				error $codigoError
 				menuPersonalizar
 			fi
 		else
-			codigoError=1
-			error $codigoError
 			menuPersonalizar
 		fi
 	fi
@@ -375,29 +362,29 @@ function color () {
 			archivo="/lib/plymouth/themes/default.grub"
 
 			case $1 in
-				1)			
-					variable="menu_color_normal="
-                    texto="color normal"
-				;;
-				2)
-					variable="menu_color_highlight="
-                    texto="color resaltado"
-				;;
+			1)			
+				variable="menu_color_normal="
+				texto="color normal"
+			;;
+			2)
+				variable="menu_color_highlight="
+				texto="color resaltado"
+			;;
 			esac
 
 			buscar=`grep $variable $archivo`
+			
 			if  [ "$buscar" != "" ] #Si al realizar el grep, hemos hallado algo, borramos la línea
 			then
 				sed -i "/$variable/d" $archivo
 			fi
+			
 			echo "$variable$color" >> $archivo
 			codigoError=2
-      			anadirLog "$texto" $color
+			#anadirLog "$texto" $color
 			error $codigoError
 		fi
 	else
-		codigoError=1
-		error $codigoError
 		menuPersonalizar
 	fi
 }
