@@ -18,9 +18,6 @@
 
 bucle=true
 
-#Cargamos el menú de perfiles
-perfiles
-
 #Menú principal
 while [ $bucle = true ]
 do
