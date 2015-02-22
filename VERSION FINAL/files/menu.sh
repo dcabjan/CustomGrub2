@@ -18,9 +18,6 @@
 
 bucle=true
 
-#Cargamos el menú de perfiles
-perfiles
-
 #Menú principal
 while [ $bucle = true ]
 do
@@ -35,7 +32,7 @@ do
 
 	if [ $? -eq 1 ]
 	then
-		perfiles
+		./perfiles.sh
 	else
 		case $opcion in
 		1)

@@ -29,14 +29,29 @@ Se modifica correctamente la contraseña.
 Error desconocido al crear la contraseña.
 9:Error. La contraseña no fue creada a causa de un error desconocido.
 
+Se crea correctamente el usuario.
+10:Usuario creado correctamente.
+
 Error al acceder al menú de nueva contraseña porque ya existía una previamente.
 11:Error. Ya existe una contraseña. Para modificar la contraseña existente seleccione la opción "Modificar contraseña".
+
+Usuario eliminado.
+12:Usuario eliminado correctamente.
 
 Error al acceder al menú de eliminar contraseña si no hay una establecida.
 13:Error. No hay establecida ninguna contraseña actualmente.
 
+perfil restaurado.
+14:Perfil predeterminado restaurado correctamente.
+
 Error desconocido al eliminar la contraseña.
 15:Error. La contraseña no fue eliminada a causa de un error desconocido.
 
+perfil elegido
+16:Perfil elegido correctamente.
+
 Error desconocido al modificar la contraseña.
 17:Error. La contraseña no fue modificada a causa de un error desconocido.
+
+error autenticacion
+19:Error. Necesitas permisos de administrador para la ejecución.
