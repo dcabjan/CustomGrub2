@@ -305,8 +305,11 @@ function menuConfiguracion () {
 		#Cuenta cuantos sistemas operativos se muestran en lista de grub
 		longEntradas=`grep "menuentry '" /boot/grub/grub.cfg -c`
 		contador=1
+		#Localizamos las lineas de manea dinamica de submenu "Opciones avanzadas"
+		primerString=`grep -n "submenu" /boot/grub/grub.cfg | cut -d ":" -f1`
+		segundoString=`grep -n "END /etc/grub.d/10_linux" /boot/grub/grub.cfg | cut -d ":" -f1`
 		#se busca menuentry excluyendo aquellas lineas en las cuales forman parte de un submenú
-		opcionesEntradas=`sed '150,190d' /boot/grub/grub.cfg | grep "menuentry '" | cut -d "(" -f 1 | tr -d ' '`
+		opcionesEntradas=`sed "$primerString"",""${segundoString}d" /boot/grub/grub.cfg | grep "menuentry '" | cut -d "(" -f 1 | tr -d ' '`
 		for i in $opcionesEntradas
 		do
 			#Cogemos el nombre de cada opcion que viene en la lista de grub y las metemos en una variable
@@ -335,7 +338,10 @@ function menuConfiguracion () {
 			if [ 'x'$ventanaEntradaPredeterminada != 'x' ]
 			then
 				ventanaEntradaPredeterminada=`echo $ventanaEntradaPredeterminada | cut -d "|" -f 1 | cut -d '.' -f 1`
+			    let ventanaEntradaPredeterminada=$ventanaEntradaPredeterminada-1
 				entradaPorDefecto "$ventanaEntradaPredeterminada"
+				codError=2
+				error $codError
 			else
 				##En el caso de que no se elija opcion error vale 3 y se pasará como parametro a funcion error
 				codError=3
@@ -349,12 +355,16 @@ function menuConfiguracion () {
 		esac
     ;;
 	"3.")
+		value=`grep "GRUB_TIMEOUT=" "/etc/default/grub" | cut -d "=" -f2`
+		echo $value
 		#Menu timeout
-		ventanaTimeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="30" --max-value="60" --min-value="5" --step="5"`
+		ventanaTimeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="$value" --max-value="60" --min-value="5" --step="5"`
 		case $? in
 		0)
 			#Si da a aceptar procede a cambiar el valor en grub
 			timeout $ventanaTimeout
+			codError=2
+			error $codError
 		;;
 		1)
 			##Volver a la ventana ventana configuracion
