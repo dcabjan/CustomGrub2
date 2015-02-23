@@ -150,7 +150,8 @@ function menuPersonalizar () {
 			opcion=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija una opción" \
 			  --column="Valor" --column="Seleccione una opción" \
 			  "1" \ "Seleccionar un color" \
-			  "2" \ "Seleccionar una imagen")
+			  "2" \ "Seleccionar una imagen" \
+				"3" \ "Quitar imagen")
 
 			codError=$?
 
@@ -159,14 +160,40 @@ function menuPersonalizar () {
 			then
 				case $opcion in
 				1)
+					ventanaConfirm=(`zenity --question --text="Esta opción deshabilitará la imagen, si la hubiese, ¿desea continuar?"`)
+					if [ $? -ne 0 ]
+					then
+						menuPersonalizar
+					fi
+
 					#Mostramos la ventana de selección de color de fondo
-					echo "Ventana de selección de color"
+				  	color=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija un color de resaltado" \
+					--column="Valor" --column="Seleccione un color (fuente/fondo)" \
+					"yellow/dark-gray" \ "Amarillo / Gris oscuro" \
+					"white/black" \ "Blanco / Negro" \
+					"cyan/black" \ "Cian / Negro " \
+					"light-green/black" \ "Verde claro / Negro" \
+					"black/red" \ "Negro / Rojo" \
+					"yellow/blue" \ "Amarillo / Azul")
+
+
+					color 3
 				;;
 				2)
 					#Mostramos la ventana de selección de ficheros
 					ruta=`zenity --file-selection`
 
 					imgfondo $ruta
+				;;
+				3)
+					ventanaConfirm=(`zenity --question --text="¿Esta usted seguro que desea quitar la imagen actual?"`)
+					if [ $? -eq 0 ]
+					then
+						quitarImagen
+
+					else
+						menuPersonalizar
+					fi
 				;;
 				esac
 			else if [ $codError -eq 1 ]
@@ -190,7 +217,7 @@ function menuPersonalizar () {
 				then					
 				  #Mostramos una selección de colores
 				  color=$(zenity --list --print-column="1" --cancel-label="Atrás" --hide-column="1" --height="300" --width="400" --title="Elija un color de resaltado" \
-				    --column="Valor" --column="Seleccione un color" \
+				    --column="Valor" --column="Seleccione un color (fuente/fondo)" \
 				    "yellow/dark-gray" \ "Amarillo / Gris oscuro" \
 				    "white/black" \ "Blanco / Negro" \
 				    "cyan/black" \ "Cian / Negro " \
@@ -226,7 +253,7 @@ function menuPersonalizar () {
 		      listaRes=`listaResoluciones`
 
 		      #Se muestra al usuario una lista con todas las resoluciones disponibles
-		      opcion=`zenity --list --cancel-label="Atrás" --height="300" --width="400" --column "Resoluciones" $listaRes`
+          opcion=$(zenity --entry --cancel-label="Atrás" --height="300" --width="400" --title="Resoluciones" --text="Por favor, elija una resolución" $listaRes)
 
 		      resolucion
 
@@ -336,4 +363,20 @@ function menuConfiguracion () {
 		esac
 	;;
   esac
+}
+
+#Ventana para mostrar los registros LOG
+function registroLog () {
+	#Mostrar la lista de LOGS disponibles
+	listaLogs=`listaLogs`
+
+	#Se muestra al usuario una lista con todas las resoluciones disponibles
+	opcion=$(zenity --entry --cancel-label="Atrás" --height="300" --width="400" --title="Historial de Logs" --text="Por favor, elija un log" $listaLogs)
+
+	if [ $opcion != "" ]
+	then
+		abrirLog $opcion
+	else
+		return
+	fi
 }

@@ -23,6 +23,22 @@ calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error e
 	mensaje $label "$error"
 }
 
+function anadirLog () {
+	texto="Se ha modificado $1 a $2\n"
+	textoLog=$textoLog$texto
+}
+
+escribirLog() {
+    fecha=`date +"%d-%m-%Y"`
+	hora=`date +"%H:%M"`
+	nombre="${fecha}_${hora}"
+    location="/home/.customgrub2/profiles/logs"
+  
+    echo -e "En perfil $perfil:\n$textoLog" >> $location/$nombre
+	
+		textoLog="" #Se vacía la variable
+}
+
 #Realiza un guardado de los cambios realizados
 function guardarCambios () {
   #Copiar los archivos de GRUB a la carpeta del perfil del usuario
@@ -32,22 +48,8 @@ function guardarCambios () {
   
   #Actualizar el GRUB
   update-grub2                
-  ##Añadir a archivo log los cambios realizados. 
-}
-
-##Funcion que añade lineas a un archivo de registros .log
-function anadirLog() {
-    fecha=`date +"%d_%m_%Y"`
-	hora=`date +"%H_%M"`
-    location="/home/.customgrub2/profiles"
-    folder=`ls $location/$fecha`
-  
-    if [ $? -eq 1 ] ##Crea o añade registro log en un archivo.
-    then
-    	mkdir $location/$fecha
-    fi
-    
-    echo -e "Se ha modificado $1 a $2 en perfil $perfil\n" >> $location/$fecha/$hora
+  ##Añadir a archivo log los cambios realizados.
+	escribirLog
 }
 
 #funciones para la opción de crear nueva contraseña
@@ -297,10 +299,30 @@ function resolucion () {
 
 			codigoError=2
 			error $codigoError
-			#anadirLog "resolucion" $opcion
+			anadirLog "resolución" $opcion
 		fi
 	else
 		menuPersonalizar
+	fi
+}
+
+#Quitar imagen de fondo
+function quitarImagen () {
+	#Si hay una imagen puesta, la quitamos
+	archivoImagen="/etc/default/grub"
+	variableImagen="GRUB_BACKGROUND="
+	quitarImagen=`grep $variableImagen $archivoImagen`
+
+	if  [ "$quitarImagen" != "" ] #Si al realizar el grep, hemos hallado algo, borramos la línea
+	then
+		sed -i "/$variableImagen/d" $archivoImagen
+		
+		codigoError=2
+		error $codigoError
+		anadirLog "quitar imagen" "sí"
+	else
+		codigoError=21
+		error $codigoError
 	fi
 }
 
@@ -333,9 +355,10 @@ function imgfondo () {
 				fi
 
 				echo "$variable\"$1\"" >> $archivo
+	
 				codigoError=2
 				error $codigoError
-				#anadirLog "imagen de fondo" $ruta
+				anadirLog "imagen de fondo" $ruta
 			else
 				codigoError=5
 				error $codigoError
@@ -349,7 +372,6 @@ function imgfondo () {
 
 
 #Color de fuente del menú
-
 function color () {
 	#Si el usuario ha pulsado en Aceptar, se procede a realizar el cambio
 	if [ $? -eq 0 ]
@@ -359,16 +381,30 @@ function color () {
 			codigoError=3
 			error $codigoError
 		else
+			#Si hay una imagen puesta, la quitamos
+			archivoImagen="/etc/default/grub"
+			variableImagen="GRUB_BACKGROUND="
+			quitarImagen=`grep $variableImagen $archivoImagen`
+
+			if  [ "$quitarImagen" != "" ] #Si al realizar el grep, hemos hallado algo, borramos la línea
+			then
+				sed -i "/$variableImagen/d" $archivoImagen
+			fi
+
 			archivo="/lib/plymouth/themes/default.grub"
 
 			case $1 in
 			1)			
 				variable="menu_color_normal="
-				texto="color normal"
+				texto="fuente normal"
 			;;
 			2)
 				variable="menu_color_highlight="
-				texto="color resaltado"
+				texto="fuente resaltada"
+			;;
+			3)
+				variable="color_normal="
+				texto="fuente exterior"
 			;;
 			esac
 
@@ -376,12 +412,19 @@ function color () {
 			
 			if  [ "$buscar" != "" ] #Si al realizar el grep, hemos hallado algo, borramos la línea
 			then
-				sed -i "/$variable/d" $archivo
+				dif=`echo $buscar | cut -d "=" -f 1`
+				
+				if [ "$dif" = "$variable" ]
+				then
+					sed -i "/$variable/d" $archivo
+				else
+					sed -i "/$dif/d" $archivo
+				fi
 			fi
 			
 			echo "$variable$color" >> $archivo
 			codigoError=2
-			#anadirLog "$texto" $color
+			anadirLog "$texto" $color
 			error $codigoError
 		fi
 	else
@@ -389,3 +432,16 @@ function color () {
 	fi
 }
 
+#Montamos la lista de LOGS disponibles
+function listaLogs() {
+	logs=`ls -t /home/.cutomgrub2/profiles | head -10`
+
+	echo $logs
+}
+
+#Abrimos el log seleccionado en un editor
+function abrirLog() {
+	location="/home/.customgrub2/profiles"
+
+	gedit "$location/$1"
+}

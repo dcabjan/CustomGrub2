@@ -50,7 +50,7 @@ do
 		;;
 		4)
 			#Función que muestra el historial de logs, los cuales se podrán visualizar
-			echo "Ventana de registro de actividad"
+			registroLog
 		;;	
 		5)
 			#Función que guarda los cambios y actualiza el GRUB2. Requiere confirmación
