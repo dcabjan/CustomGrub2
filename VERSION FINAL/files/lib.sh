@@ -243,7 +243,7 @@ function timeout() {
   archivo="/etc/default/grub"
   string="GRUB_TIMEOUT="
   buscaReemplaza "$string" $archivo "$1"
-  #anadirLog "timeout" $1
+  anadirLog "timeout" $1
 }
 
 ##Comenta lineas añadiendo un #
@@ -294,11 +294,11 @@ function recoveryMode () {
   case $ventanaRecovery in
     "1.") ##Caso en el que se elija la opcion "Habilitar recovery"
       descomentarLinea $string $archivo
-      #anadirLog "recovery mode" "Habilitado"
+      anadirLog "recovery mode" "Habilitado"
     ;;    
     "2.") ##Caso en el que se elija "Deshabilitar Recovery"
       comentarLinea $string $archivo
-      #anadirLog "recovery mode" "Deshabilitado"
+      anadirLog "recovery mode" "Deshabilitado"
     ;;
   esac
 }
@@ -308,7 +308,7 @@ function entradaPorDefecto () {
   archivo="/etc/default/grub"
   string="GRUB_DEFAULT="
   buscaReemplaza $string $archivo "$1"
-  #anadirLog "entrada por defecto" $1
+  anadirLog "entrada por defecto" $1
 }
 
 #Montamos la lista de las resoluciones disponibles
