@@ -6,11 +6,11 @@
 #
 
 ##Busca el codigo de error recibido como parametro en una base de datos
-function error () {
+function mensaje () {
 
 #Utilizamos una expresión regular para buscar en la base de datos de códigos de error/información
-#error=`grep "^${1}:" "/bin/.customgrub2/msg_error" | cut -f 2 -d ":"`
-error=`grep "^${1}:" "./msg_error" | cut -f 2 -d ":"`
+error=`grep "^${1}:" "/bin/.customgrub2/msg_error" | cut -f 2 -d ":"`
+#error=`grep "^${1}:" "./msg_error" | cut -f 2 -d ":"`
 
 calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error es par o impar
 
@@ -21,7 +21,7 @@ calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error e
 		label="--error" #Si es impar, se pone la etiqueta error
 	fi
 
-	mensaje $label "$error"
+	mensajeError $label "$error"
 }
 
 function anadirLog () {
@@ -90,27 +90,27 @@ NEW
 					#eliminamos el fichero temporal
 					rm temp
 					#mostramos mensaje de que la contraseña se ha creado correctamente
-					error 4
+					mensaje 4
 					anadirLog "Contraseña: Se ha creado una nueva contraseña."
 					menuGestionContra
 				#si la acción de escritura no ha ido bien
 				else
-					error 9
+					mensaje 9
 					menuGestionContra
 				fi
 			#si la contraseña no es válida
 			else
-				error 23
+				mensaje 23
 				menuGestionContra
 			fi
 		#si el nombre de usuario no es válido	
 		else
-			error 25
+			mensaje 25
 			menuGestionContra
 		fi
 	#si las contraseñas no coinciden mostramos mensaje de error
 	else
-		error 27
+		mensaje 27
 		menuGestionContra
 	fi
 }
@@ -148,22 +148,22 @@ TEMPMOD
 				#eliminamos el fichero temporal
 				rm temp
 				#mostramos mensaje de que la contraseña se ha modificado correctamente
-				error 8
+				mensaje 8
 				anadirLog "Contraseña: Se ha modificado la contraseña."
 				menuGestionContra
 			#si la acción de sustitución no ha ido bien
 			else
-				error 9
+				mensaje 9
 				menuGestionContra
 			fi
 		#si la contraseña no es válida
 		else
-			error 23
+			mensaje 23
 			menuGestionContra
 		fi
 	#si las contraseñas no coinciden mostramos mensaje de error
 	else
-		error 27
+		mensaje 27
 		menuGestionContra
 	fi
 }
@@ -181,11 +181,11 @@ function eliminaContra(){
 		#volvemos a generar el fichero de grub
 		#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
 		#mostramos mensaje de que la contraseña se ha eliminado correctamente
-		error 6
+		mensaje 6
 		anadirLog "Contraseña: Se ha eliminado la contraseña."
 		menuGestionContra
 	else
-		error 15
+		mensaje 15
 		menuGestionContra
 	fi
 }
@@ -333,7 +333,7 @@ function resolucion () {
 		if [ "$opcion" = "" ]
 		then
 			codigoError=3
-			error $codigoError
+			mensaje $codigoError
 		else
 			archivo="/etc/default/grub"
 			variable="GRUB_GFXMODE="
@@ -355,7 +355,7 @@ function resolucion () {
 			done
 
 			codigoError=2
-			error $codigoError
+			mensaje $codigoError
 			anadirLog "resolución" $opcion
 		fi
 	else
@@ -375,11 +375,11 @@ function quitarImagen () {
 		sed -i "/$variableImagen/d" $archivoImagen
 		
 		codigoError=2
-		error $codigoError
+		mensaje $codigoError
 		anadirLog "quitar imagen" "sí"
 	else
 		codigoError=21
-		error $codigoError
+		mensaje $codigoError
 	fi
 }
 
@@ -414,11 +414,11 @@ function imgfondo () {
 				echo "$variable\"$1\"" >> $archivo
 	
 				codigoError=2
-				error $codigoError
+				mensaje $codigoError
 				anadirLog "imagen de fondo" $ruta
 			else
 				codigoError=5
-				error $codigoError
+				mensaje $codigoError
 				menuPersonalizar
 			fi
 		else
@@ -436,7 +436,7 @@ function color () {
 		if [ "$color" = "" ]
 		then
 			codigoError=3
-			error $codigoError
+			mensaje $codigoError
 		else
 			#Si hay una imagen puesta, la quitamos
 			archivoImagen="/etc/default/grub"
@@ -482,7 +482,7 @@ function color () {
 			echo "$variable$color" >> $archivo
 			codigoError=2
 			anadirLog "$texto" $color
-			error $codigoError
+			mensaje $codigoError
 		fi
 	else
 		menuPersonalizar
@@ -522,7 +522,7 @@ function perfilElegir() {
     #restaurar del directorio del perfil los siguientes archivos al directorio original
     cp -f /home/.customgrub2/profiles/$perfil/default.grub /lib/plymouth/themes/default.grub
     cp -f /home/.customgrub2/profiles/$perfil/grub /etc/default/grub
-    cp -f /home/.customgrub2/profiles/$perfil/grub.cfg /boot/grub2/grub.cfg	
+    cp -f /home/.customgrub2/profiles/$perfil/grub.cfg /boot/grub2/grub.cfg
 }
 function perfilRestaurar() {
     #restaurar del directorio .default los siguientes archivos al directorio original
@@ -531,4 +531,3 @@ function perfilRestaurar() {
     cp -f /home/.customgrub2/profiles/.default/grub.cfg /boot/grub2/grub.cfg
   
 }
-

@@ -9,7 +9,7 @@
 . /bin/.customgrub2/lib.sh
 
 #Función que crea las ventanas con los mensajes de error/información
-function mensaje() {
+function mensajeError() {
 	zenity $1 --text "$2"
 }
 
@@ -50,7 +50,7 @@ function menuGestionContra(){
             if [ ${#nuevaDatos[*]} -ne 3 ]
               #si no los ha rellenado todos muestra mensaje de error
               then
-              error 7
+              mensaje 7
               menuGestionContra
             #si el usuario ha rellenado todos los campos
             else
@@ -63,7 +63,7 @@ function menuGestionContra(){
           fi
         #si existe una contraseña previamente un mensaje de error
         else
-          error 11
+          mensaje 11
           menuGestionContra
         fi
       ;;
@@ -84,7 +84,7 @@ function menuGestionContra(){
           if [ ${#modificaDatos[*]} -ne 2 ]
             #si no los ha rellenado todos muestra mensaje de error
             then
-            error 7
+            mensaje 7
             menuGestionContra
           #si el usuario ha rellenado todos los campos
           else
@@ -97,7 +97,7 @@ function menuGestionContra(){
         fi
       #si no existe una contraseña mostramos un mensaje de error
       else
-        error 13
+        mensaje 13
         menuGestionContra
       fi
       ;;
@@ -119,13 +119,13 @@ function menuGestionContra(){
           menuGestionContra
         fi
       else
-        error 13
+        mensaje 13
         menuGestionContra
       fi
       ;;
     esac
   else
-    error 3
+    mensaje 3
     menuGestionContra
   fi
 fi
@@ -201,7 +201,7 @@ function menuPersonalizar () {
 					menuPersonalizar
 				else
 					codigoError=3
-					error $codigoError
+					mensaje $codigoError
 				fi
 			fi
 			;;
@@ -235,7 +235,7 @@ function menuPersonalizar () {
 					;;
 					*)
 						codigoError=3
-						error $codigoError
+						mensaje $codigoError
 					;;
 					esac
 				else if [ $codError -eq 1 ]
@@ -243,7 +243,7 @@ function menuPersonalizar () {
 					 	menuPersonalizar
 					else
 						codigoError=3
-						error $codigoError
+						mensaje $codigoError
 					fi
 				fi
 			;;
@@ -264,7 +264,7 @@ function menuPersonalizar () {
 			return
 		else #Si ninguna de las anteriores es cierta, el usuario no ha seleccionado ninguna opción y ha pulsado en "Aceptar", por lo que mostramos un error
 			codigoError=3
-			error $codigoError
+			mensaje $codigoError
 		fi
 	fi
 }
@@ -299,7 +299,7 @@ function menuConfiguracion () {
 				  recoveryMode
 				else
 					codError=3
-					error $codError
+					mensaje $codError
 					ventanaConfiguracion
 				fi
 			#Si ha dado a cancelar vuelve al menu de configuracion
@@ -348,11 +348,11 @@ function menuConfiguracion () {
 				    let ventanaEntradaPredeterminada=$ventanaEntradaPredeterminada-1
 					entradaPorDefecto "$ventanaEntradaPredeterminada"
 					codError=2
-					error $codError
+					mensaje $codError
 				else
 					##En el caso de que no se elija opcion error vale 3 y se pasará como parametro a funcion error
 					codError=3
-					error $codError
+					mensaje $codError
 				fi      
 			;;
 			1)
@@ -371,7 +371,7 @@ function menuConfiguracion () {
 				#Si da a aceptar procede a cambiar el valor en grub
 				timeout $ventanaTimeout
 				codError=2
-				error $codError
+				mensaje $codError
 			;;
 			1)
 				##Volver a la ventana ventana configuracion
@@ -382,7 +382,7 @@ function menuConfiguracion () {
 	  esac
 	else
 		codError=3
-		error $codError
+		mensaje $codError
 	fi
 	fi
 }
@@ -409,13 +409,13 @@ function perfiles() {
 #comprueba root, en caso de que no sea sale de la aplicacion
 if [ $USER != "root" ]
 then
-  error 19
+  mensaje 19
   exit
 fi
  
 #muestra menu con opciones a elegir
 opcionperfil=`zenity --list \
- --column="Elige opcion de perfil" \
+ --column="Elige opcion de perfil" --height="300" --width="400" --cancel-label="Salir" \
 "Nuevo perfil" \
 "Modificar perfil" \
 "Eliminar perfil" \
@@ -454,18 +454,18 @@ then
 	#si el usuario existe muestra error y vuelve a menu perfiles
 	if [ $resultado -eq 1 ]
 	  then
-	    error 29
+	    mensaje 29
 	    perfiles
 	  else
 	    #si no existe se crea el perfil
 	    perfilCrear
-	    error 10
+	    mensaje 10
 	    perfiles	    
 	fi
 	
       else
 	# si se ha introducido valor vacio muestra error y vuelve a menu perfiles
-	error 1
+	mensaje 1
 	perfiles
       fi
     ;;
@@ -483,7 +483,7 @@ then
 	return
       else
 	#muestra error de perfil no elegido
-	error 3
+	mensaje 3
 	perfiles
       fi
     ;;
@@ -502,14 +502,14 @@ then
 	if [ $? = 0 ]
 	then
 	  perfilEliminar $opcion
-	  error 12
+	  mensaje 12
 	  perfiles
 	else
 	  perfiles
 	fi
       else
 	#muestra error de no haber elegido opcion
-	error 3
+	mensaje 3
 	perfiles
       fi
     ;;  
@@ -522,7 +522,7 @@ then
       if [ $? = 0 ]
       then
 	  perfilRestaurar
-	  error 14
+	  mensaje 14
 	  perfiles
       else
 	perfiles
@@ -537,10 +537,10 @@ then
       if [ $? = 0 ]
       then
 	  perfilElegir
-	  error 16
+	  mensaje 16
 	  perfiles
       else
-	error 3
+	mensaje 3
 	perfiles
       fi
     ;;
