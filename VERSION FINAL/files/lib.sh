@@ -91,6 +91,7 @@ NEW
 					rm temp
 					#mostramos mensaje de que la contraseña se ha creado correctamente
 					error 4
+					anadirLog "Contraseña: Se ha creado una nueva contraseña."
 					menuGestionContra
 				#si la acción de escritura no ha ido bien
 				else
@@ -148,6 +149,7 @@ TEMPMOD
 				rm temp
 				#mostramos mensaje de que la contraseña se ha modificado correctamente
 				error 8
+				anadirLog "Contraseña: Se ha modificado la contraseña."
 				menuGestionContra
 			#si la acción de sustitución no ha ido bien
 			else
@@ -180,6 +182,7 @@ function eliminaContra(){
 		#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
 		#mostramos mensaje de que la contraseña se ha eliminado correctamente
 		error 6
+		anadirLog "Contraseña: Se ha eliminado la contraseña."
 		menuGestionContra
 	else
 		error 15
