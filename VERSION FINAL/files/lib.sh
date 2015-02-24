@@ -9,7 +9,8 @@
 function error () {
 
 #Utilizamos una expresión regular para buscar en la base de datos de códigos de error/información
-error=`grep "^${1}:" "/bin/.customgrub2/msg_error" | cut -f 2 -d ":"`
+#error=`grep "^${1}:" "/bin/.customgrub2/msg_error" | cut -f 2 -d ":"`
+error=`grep "^${1}:" "./msg_error" | cut -f 2 -d ":"`
 
 calc=`expr ${1} % 2` #Realizamos el cálculo para saber si el número de error es par o impar
 
@@ -57,40 +58,58 @@ function nuevaContra(){
 	datos=($@)
 	#comprueba si ambas contraseñas coinciden
 	if [ ${datos[1]} == ${datos[2]} ]
-		#si coinciden modificamos el fichero
+		#si coinciden comprobamos el nombre de usuario y la contraseña
 		then
-		#creamos un fichero temporal con la contraseña
-		cat > temp <<TEMPNEW
+		#comprobamos el nombre de usuario
+		if [ `checkUser ${datos[0]}` -eq 0 ]
+			#si cumple los requisitos
+			then
+			#comprobamos la contraseña
+			if [ `checkContra ${datos[1]}` -eq 0 ]
+				#si cumple los requisitos
+				then
+				#creamos un fichero temporal con la contraseña
+				cat > temp <<TEMPNEW
 ${datos[1]}
 ${datos[1]}
 
 TEMPNEW
-		#encriptamos la contraseña
-		encrypt=(`grub-mkpasswd-pbkdf2 < temp`)
-		#escribimos el código en el fichero para crear la contraseña
-		cat >> /etc/grub.d/40_custom <<NEW
+				#encriptamos la contraseña
+				encrypt=(`grub-mkpasswd-pbkdf2 < temp`)
+				#escribimos el código en el fichero para crear la contraseña
+				cat >> /etc/grub.d/40_custom <<NEW
 set superusers="${datos[0]}"
 password ${datos[0]} ${encrypt[12]}
 NEW
-		#comprobamos si la acción de escritura ha ido bien
-		if [ $? -eq 0 ]
-			#si ha ido bien
-			then
-			#volvemos a generar el fichero de grub
-			#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
-			#eliminamos el fichero temporal
-			rm temp
-			#mostramos mensaje de que la contraseña se ha creado correctamente
-			error 4
-			menuGestionContra
-		#si la acción de escritura no ha ido bien
+				#comprobamos si la acción de escritura ha ido bien
+				if [ $? -eq 0 ]
+					#si ha ido bien
+					then
+					#volvemos a generar el fichero de grub
+					#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
+					#eliminamos el fichero temporal
+					rm temp
+					#mostramos mensaje de que la contraseña se ha creado correctamente
+					error 4
+					menuGestionContra
+				#si la acción de escritura no ha ido bien
+				else
+					error 9
+					menuGestionContra
+				fi
+			#si la contraseña no es válida
+			else
+				error 23
+				menuGestionContra
+			fi
+		#si el nombre de usuario no es válido	
 		else
-			error 9
+			error 25
 			menuGestionContra
 		fi
 	#si las contraseñas no coinciden mostramos mensaje de error
 	else
-		error 4
+		error 27
 		menuGestionContra
 	fi
 }
@@ -100,40 +119,49 @@ function modificaContra(){
 	datos=($@)
 	#comprueba si ambas contraseñas coinciden
 	if [ ${datos[0]} == ${datos[1]} ]
-		#si coinciden modificamos el fichero
+		#si coinciden comprobamos la contraseña
 		then
-		#creamos un fichero temporal con la contraseña
-		cat > temp <<TEMPMOD
+		#comprobamos la contraseña
+		if [ `checkContra ${datos[0]}` -eq 0 ]
+			#si cumple los requisitos
+			then
+			#creamos un fichero temporal con la contraseña
+			cat > temp <<TEMPMOD
 ${datos[0]}
 ${datos[0]}
 
 TEMPMOD
-		#encriptamos la contraseña
-		encrypt=(`grub-mkpasswd-pbkdf2 < temp`)
-		#buscamos la línea a modificar
-		linea=($(grep -n "set superusers=" /etc/grub.d/40_custom | tr ":" " " | tr "\"" " "))
-		user=${linea[3]}
-		#sustituimos el string que contiene la contraseña
-		sed -i "s/^password $user.*/password $user ${encrypt[12]}/" /etc/grub.d/40_custom
-		#comprobamos si la acción de sustitución ha ido bien
-		if [ $? -eq 0 ]
-			#si ha ido bien
-			then
-			#volvemos a generar el fichero de grub
-			#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
-			#eliminamos el fichero temporal
-			rm temp
-			#mostramos mensaje de que la contraseña se ha modificado correctamente
-			error 8
-			menuGestionContra
-		#si la acción de sustitución no ha ido bien
+			#encriptamos la contraseña
+			encrypt=(`grub-mkpasswd-pbkdf2 < temp`)
+			#buscamos la línea a modificar
+			linea=($(grep -n "set superusers=" /etc/grub.d/40_custom | tr ":" " " | tr "\"" " "))
+			user=${linea[3]}
+			#sustituimos el string que contiene la contraseña
+			sed -i "s/^password $user.*/password $user ${encrypt[12]}/" /etc/grub.d/40_custom
+			#comprobamos si la acción de sustitución ha ido bien
+			if [ $? -eq 0 ]
+				#si ha ido bien
+				then
+				#volvemos a generar el fichero de grub
+				#!!!!!!!!!!!!!!!!!ACTIVAR!!!!!!!!!!!!!!!!!!!sudo update-grub2
+				#eliminamos el fichero temporal
+				rm temp
+				#mostramos mensaje de que la contraseña se ha modificado correctamente
+				error 8
+				menuGestionContra
+			#si la acción de sustitución no ha ido bien
+			else
+				error 9
+				menuGestionContra
+			fi
+		#si la contraseña no es válida
 		else
-			error 9
+			error 23
 			menuGestionContra
 		fi
 	#si las contraseñas no coinciden mostramos mensaje de error
 	else
-		error 4
+		error 27
 		menuGestionContra
 	fi
 }
@@ -170,6 +198,32 @@ function existeContra(){
 		echo 0
 	#si no existe devolvemos 1
 	else
+		echo 1
+	fi
+}
+
+#compruebaque el nombre de usuario sea válido
+function checkUser(){
+	#compara las cadenas
+	if [[ "$1" == `echo $1 | grep '^[A-Za-z0-9]\{5,10\}$'` ]]
+		#si es igual devolvemos 0
+		then
+		echo 0
+	#si no es igual devolvemos 1
+	else
+		echo 1
+	fi
+}
+
+#comprueba que la contraseña sea válida
+function checkContra(){
+	#compara las cadenas
+	if [[ ${#1} -ge 9 && ${#1} -lt 16 && "$1" == *[A-Z]* && "$1" == *[a-z]* && "$1" == *[0-9]* ]]
+		then
+		#si es igual devolvemos 0
+		echo 0
+	#si no es igual devolvemos 1
+	else	
 		echo 1
 	fi
 }

@@ -41,20 +41,29 @@ Usuario eliminado.
 Error al acceder al menú de eliminar contraseña si no hay una establecida.
 13:Error. No hay establecida ninguna contraseña actualmente.
 
-perfil restaurado.
+Perfil restaurado.
 14:Perfil predeterminado restaurado correctamente.
 
 Error desconocido al eliminar la contraseña.
 15:Error. La contraseña no fue eliminada a causa de un error desconocido.
 
-perfil elegido
+Perfil elegido
 16:Perfil elegido correctamente.
 
 Error desconocido al modificar la contraseña.
 17:Error. La contraseña no fue modificada a causa de un error desconocido.
 
-error autenticacion
+Error de autenticacion
 19:Error. Necesitas permisos de administrador para la ejecución.
 
 Imagen no existe
 21:Error. No hay ninguna imagen actualmente.
+
+La contraseña no es válida.
+23:Error. La contraseña no es válida. Debe tener una longitud de entre 10 y 15 carácteres, y contener almenos una letra mayúscula, una letra minúscula y un número.
+
+El nombre de usuario no es válido.
+25:Error. El nombre de usuario no es válido. Debe tener una longitud de entre 5 y 10 carácteres y sólo puede contener letras mayúsculas, letras minúsculas y números.
+
+Las contraseñas no coinciden.
+27:Error. Las contraseñas no coinciden.
