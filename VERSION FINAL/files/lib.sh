@@ -29,13 +29,23 @@ function anadirLog () {
 	textoLog=$textoLog$texto
 }
 
-escribirLog() {
+function escribirLog() {
     fecha=`date +"%d-%m-%Y"`
 	hora=`date +"%H:%M"`
-	nombre="${fecha}_${hora}"
+	fechaHora="${fecha}_${hora}"
     location="/home/.customgrub2/profiles/logs"
   
-    echo -e "En perfil $perfil:\n$textoLog" >> $location/$nombre
+    echo -e "En perfil $perfil a las ${fechaHora}:\n$textoLog" >> $location
+
+	#Al tener un máximo de 500 líneas en el log, borramos las sobrantes
+	cuentaLinea=`wc -l /home/.customgrub2/logs`
+	limite=500
+
+	if [ $cuentaLinea -gt $limite ]
+		then
+			let lineasRestar=$cuentaLinea-$limite
+			sed -i "0,${lineaRestar}/d" /home/.customgrub2/logs		
+	fi	
 	
 		textoLog="" #Se vacía la variable
 }
