@@ -15,6 +15,10 @@
 
 #Carga de la librería de submenús
 . /bin/.customgrub2/menus_lib.sh
+. /bin/.customgrub2/lib.sh
+
+#muestra menu de perfil
+perfiles
 
 bucle=true
 
@@ -32,7 +36,7 @@ do
 
 	if [ $? -eq 1 ]
 	then
-		./perfiles.sh
+		perfiles
 	else
 		case $opcion in
 		1)
@@ -67,3 +71,117 @@ do
 		esac
 	fi
 done
+
+function perfiles() {
+
+#comprueba root
+if [ $USER != "root" ]
+then
+  error 19
+  exit
+fi
+ 
+#muestra menu con opciones a elegir
+opcionperfil=`zenity --list \
+ --column="Elige opcion de perfil" \
+"Nuevo perfil" \
+"Modificar perfil" \
+"Eliminar perfil" \
+"Elegir perfil" \
+"Restaurar perfil"`
+
+if [ $? -eq 1 ]
+then
+  exit
+  
+  else
+  #segun opcion, ejecutara su funcion
+  case $opcionperfil in
+
+    "Nuevo perfil")
+      #textbox para insertar nuevo perfil
+      perfil=`zenity --entry \
+      --title="Añadir un perfil nuevo" \
+      --text="Escriba el nombre del perfil nuevo:"`
+      if [ $perfil ]
+      then
+	perfilCrear
+	error 10
+	perfiles
+	else
+	  error 1
+	  perfiles
+	
+      fi
+    ;;
+    
+    
+    "Modificar perfil")
+      perfil=`ls /home/.customgrub2/profiles | zenity --list \
+      --column="Elige opcion de perfil"`
+      if [ $perfil ]
+      then    
+	perfilModificar $perfil
+	return
+      else
+	error 3
+	perfiles
+      fi
+    ;;
+    
+    "Eliminar perfil")
+      #coge lista de directorios existentes del directorio profiles donde estan los perfiles
+      opcion=`ls /home/.customgrub2/profiles | zenity --list \
+      --column="Elige opcion de perfil"`
+      if [ $opcion ]
+      then    
+	#al elegir uno se solicita confirmacion
+	zenity --question \
+	--text="¿Está seguro de que quiere eliminar?"
+	if [ $? = 0 ]
+	then
+	  perfilEliminar $opcion
+	  error 12
+	  perfiles
+	else
+	  perfiles
+	fi
+      else
+	error 3
+	perfiles
+      fi
+    ;;  
+    
+    "Restaurar perfil")
+      #solicita confirmacion
+      zenity --question \
+      --text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
+      if [ $? = 0 ]
+      then
+	  perfilRestaurar
+	  error 14
+	  perfiles
+      else
+	perfiles
+      fi
+    ;;
+    
+    "Elegir perfil")
+      #coge lista de directorios existentes del directorio profiles donde estan los usuarios
+      opcion=`ls /home/.customgrub2/profiles | zenity --list \
+      --column="Elige opcion de perfil"`
+      if [ $? = 0 ]
+      then
+	  perfilElegir
+	  error 16
+	  perfiles
+      else
+	error 3
+	perfiles
+      fi
+    ;;
+
+  esac
+fi
+
+}
