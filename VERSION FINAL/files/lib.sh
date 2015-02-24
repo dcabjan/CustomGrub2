@@ -507,7 +507,7 @@ function abrirLog() {
 function perfilModificar() {
   #se abrira el menu principal para empezar a modificar
   perfil=$1
-  #export perfil
+  export perfil
 }
 
 function perfilEliminar() {
@@ -516,7 +516,7 @@ function perfilEliminar() {
 }
 function perfilCrear() {
   #crea directorio de perfil si ha sido introducido
-  mkdir /home/.customgrub2/profiles/$perfil
+  mkdir /home/.customgrub2/profiles/"$perfil"
 }
 function perfilElegir() {
     #restaurar del directorio del perfil los siguientes archivos al directorio original

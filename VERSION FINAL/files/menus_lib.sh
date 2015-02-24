@@ -390,3 +390,150 @@ function registroLog () {
 		return
 	fi
 }
+
+
+function perfiles() {
+
+#comprueba root, en caso de que no sea sale de la aplicacion
+if [ $USER != "root" ]
+then
+  error 19
+  exit
+fi
+ 
+#muestra menu con opciones a elegir
+opcionperfil=`zenity --list \
+ --column="Elige opcion de perfil" \
+"Nuevo perfil" \
+"Modificar perfil" \
+"Eliminar perfil" \
+"Elegir perfil" \
+"Restaurar perfil"`
+
+#si el resultado es 1(error) sale de la aplicacion
+if [ $? -eq 1 ]
+then
+  exit
+  
+  else
+  #segun opcion, ejecutara su funcion
+  case $opcionperfil in
+
+    "Nuevo perfil")
+      #textbox para insertar nuevo perfil
+      perfil=`zenity --entry \
+      --title="Añadir un perfil nuevo" \
+      --text="Escriba el nombre del perfil nuevo:"`
+      #comprueba que no se ha introducido valor vacio
+      if [ $perfil != "" ]
+      then
+	#comprueba que el usuario no existe
+	perfilesexistentes=`ls /home/.customgrub2/profiles`
+	for i in $perfilesexistentes
+	do
+	  if [ $i = $perfil ]
+	  then
+	    resultado=1
+	  else
+	    resultado=0
+	    continue
+	  fi
+	done
+	#si el usuario existe muestra error y vuelve a menu perfiles
+	if [ $resultado -eq 1 ]
+	  then
+	    error 29
+	    perfiles
+	  else
+	    #si no existe se crea el perfil
+	    perfilCrear
+	    error 10
+	    perfiles	    
+	fi
+	
+      else
+	# si se ha introducido valor vacio muestra error y vuelve a menu perfiles
+	error 1
+	perfiles
+      fi
+    ;;
+    
+    
+    "Modificar perfil")
+      #muestra perfiles existentes
+      perfil=`ls /home/.customgrub2/profiles | zenity --list \
+      --column="Elige opcion de perfil"`
+      #comprueba que un perfil ha sido elegido
+      if [ $perfil ]
+      then    
+	#llama a menu modificar
+	perfilModificar $perfil
+	return
+      else
+	#muestra error de perfil no elegido
+	error 3
+	perfiles
+      fi
+    ;;
+    
+    "Eliminar perfil")
+      #coge lista de directorios existentes del directorio profiles donde estan los perfiles
+      opcion=`ls /home/.customgrub2/profiles | zenity --list \
+      --column="Elige opcion de perfil"`
+      #comprueba si se ha elegido opcion
+      if [ $opcion ]
+      then    
+	#al elegir uno se solicita confirmacion
+	zenity --question \
+	--text="¿Está seguro de que quiere eliminar?"
+	#en caso afirmativo elimina, en caso negativo muestra error
+	if [ $? = 0 ]
+	then
+	  perfilEliminar $opcion
+	  error 12
+	  perfiles
+	else
+	  perfiles
+	fi
+      else
+	#muestra error de no haber elegido opcion
+	error 3
+	perfiles
+      fi
+    ;;  
+    
+    "Restaurar perfil")
+      #solicita confirmacion
+      zenity --question \
+      --text="¿Está seguro de que quiere restaurar el perfil predeterminado?"
+      #en caso afirmativo se ejecuta la funcion, en caso negativo vuelve a menu perfiles
+      if [ $? = 0 ]
+      then
+	  perfilRestaurar
+	  error 14
+	  perfiles
+      else
+	perfiles
+      fi
+    ;;
+    
+    "Elegir perfil")
+      #coge lista de directorios existentes del directorio profiles donde estan los usuarios
+      opcion=`ls /home/.customgrub2/profiles | zenity --list \
+      --column="Elige opcion de perfil"`
+      #en caso afirmativo ejecuta funcion, en caso negativo vuelve a menu perfiles
+      if [ $? = 0 ]
+      then
+	  perfilElegir
+	  error 16
+	  perfiles
+      else
+	error 3
+	perfiles
+      fi
+    ;;
+
+  esac
+fi
+
+}

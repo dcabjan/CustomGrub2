@@ -67,3 +67,6 @@ El nombre de usuario no es válido.
 
 Las contraseñas no coinciden.
 27:Error. Las contraseñas no coinciden.
+
+Usuario ya existente.
+29:Error. Usuario ya existente.
