@@ -7,7 +7,7 @@ then
 else
 	#Creacion de directorios que usará la aplicación
 	mkdir -p /home/.customgrub2/profiles/.default
-	mkdir /home/.customgrub2/logs
+	touch /home/.customgrub2/logs
 	mkdir /bin/.customgrub2
 
 	#Copia de los ficheros de GRUB que son objeto de modificación en la aplicación, a modo de "perfil por defecto"
