@@ -389,18 +389,13 @@ function menuConfiguracion () {
 
 #Ventana para mostrar los registros LOG
 function registroLog () {
-	#Mostrar la lista de LOGS disponibles
-	listaLogs=`listaLogs`
 
-	#Se muestra al usuario una lista con todas las resoluciones disponibles
-	opcion=$(zenity --entry --cancel-label="Atrás" --height="300" --width="400" --title="Historial de Logs" --text="Por favor, elija un log" $listaLogs)
+	zenity --text-info \
+       --title="Registro de eventos" \
+       --filename="/home/.customgrub2/log" \
+	--cancel-label="Atrás"
 
-	if [ $opcion != "" ]
-	then
-		abrirLog $opcion
-	else
-		return
-	fi
+	return
 }
 
 

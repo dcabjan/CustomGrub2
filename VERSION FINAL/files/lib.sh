@@ -33,7 +33,7 @@ function escribirLog() {
     fecha=`date +"%d-%m-%Y"`
 	hora=`date +"%H:%M"`
 	fechaHora="${fecha}_${hora}"
-    location="/home/.customgrub2/profiles/logs"
+    location="/home/.customgrub2/log"
   
     echo -e "En perfil $perfil a las ${fechaHora}:\n$textoLog" >> $location
 
@@ -497,20 +497,6 @@ function color () {
 	else
 		menuPersonalizar
 	fi
-}
-
-#Montamos la lista de LOGS disponibles
-function listaLogs() {
-	logs=`ls -t /home/.cutomgrub2/profiles | head -10`
-
-	echo $logs
-}
-
-#Abrimos el log seleccionado en un editor
-function abrirLog() {
-	location="/home/.customgrub2/profiles"
-
-	gedit "$location/$1"
 }
 
 #Modificar perfil
