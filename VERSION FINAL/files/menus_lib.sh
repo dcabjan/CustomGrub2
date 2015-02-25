@@ -469,7 +469,7 @@ then
     "Modificar perfil")
       #muestra perfiles existentes
       perfil=`ls /home/.customgrub2/profiles | zenity --list \
-      --column="Elige opcion de perfil"`
+      --column="Elige opcion de perfil" --height="300" --width="400"`
       #comprueba que un perfil ha sido elegido
       if [ $perfil ]
       then    
@@ -486,7 +486,7 @@ then
     "Eliminar perfil")
       #coge lista de directorios existentes del directorio profiles donde estan los perfiles
       opcion=`ls /home/.customgrub2/profiles | zenity --list \
-      --column="Elige opcion de perfil"`
+      --column="Elige opcion de perfil" --height="300" --width="400"`
       #comprueba si se ha elegido opcion
       if [ $opcion ]
       then    
@@ -527,7 +527,7 @@ then
     "Elegir perfil")
       #coge lista de directorios existentes del directorio profiles donde estan los usuarios
       opcion=`ls /home/.customgrub2/profiles | zenity --list \
-      --column="Elige opcion de perfil"`
+      --column="Elige opcion de perfil" --height="300" --width="400"`
       #en caso afirmativo ejecuta funcion, en caso negativo vuelve a menu perfiles
       if [ $? = 0 ]
       then

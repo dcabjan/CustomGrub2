@@ -519,11 +519,16 @@ function perfilElegir() {
     cp -f /home/.customgrub2/profiles/$perfil/default.grub /lib/plymouth/themes/default.grub
     cp -f /home/.customgrub2/profiles/$perfil/grub /etc/default/grub
     cp -f /home/.customgrub2/profiles/$perfil/grub.cfg /boot/grub2/grub.cfg
+    
+    update-grub2
 }
 function perfilRestaurar() {
     #restaurar del directorio .default los siguientes archivos al directorio original
     cp -f /home/.customgrub2/profiles/.default/default.grub /lib/plymouth/themes/default.grub
     cp -f /home/.customgrub2/profiles/.default/grub /etc/default/grub
     cp -f /home/.customgrub2/profiles/.default/grub.cfg /boot/grub2/grub.cfg
+    
+    update-grub2
   
+    anadirLog "Se ha restaurado el perfil por defecto."
 }
