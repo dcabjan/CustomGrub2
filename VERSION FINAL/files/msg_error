@@ -53,6 +53,9 @@ Perfil elegido
 Error desconocido al modificar la contraseña.
 17:Error. La contraseña no fue modificada a causa de un error desconocido.
 
+Aviso al entrar en el menú de contraseñas.
+18.Atención. Las acciones realizadas en el menú de contraseña serán aplicadas inmediatamente sin necesidad de guardar los cambios al finalizar.
+
 Error de autenticacion
 19:Error. Necesitas permisos de administrador para la ejecución.
 

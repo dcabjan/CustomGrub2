@@ -57,7 +57,7 @@ do
 		;;	
 		5)
 			#Función que guarda los cambios y actualiza el GRUB2. Requiere confirmación
-			ventanaConfirm=(`zenity --question --text="¿Esta usted seguro que desea guardar los cambios realizados?"`)
+			ventanaConfirm=(`zenity --question --text="¿Está usted seguro que desea guardar los cambios realizados?"`)
 			if [ $? -eq 0 ]
 			then
 				guardarCambios

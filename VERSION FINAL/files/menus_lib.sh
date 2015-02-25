@@ -14,9 +14,10 @@ function mensajeError() {
 }
 
 #Ventana del menú de contraseñas
-function menuGestionContra(){  
-  #Muestra la ventana del menú principal de contraseñas
-  menuContra=$(zenity --list --cancel-label=Atrás --text="Elija una opción:" --title="Gestión de contraseña" --hide-column="1" --width="400" --height="400" \
+function menuGestionContra(){
+	mensaje 18
+  	#Muestra la ventana del menú principal de contraseñas
+  	menuContra=$(zenity --list --cancel-label=Atrás --text="Elija una opción:" --title="Gestión de contraseña" --hide-column="1" --width="400" --height="400" \
    --column="Valor" --column="Opciones" \
    1 "Crear contraseña" \
    2 "Modificar contraseña" \
