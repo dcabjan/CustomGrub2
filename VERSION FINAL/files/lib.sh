@@ -38,13 +38,13 @@ function escribirLog() {
     echo -e "En perfil $perfil a las ${fechaHora}:\n$textoLog" >> $location
 
 	#Al tener un máximo de 500 líneas en el log, borramos las sobrantes
-	cuentaLinea=`wc -l /home/.customgrub2/logs`
+	cuentaLinea=`wc -l /home/.customgrub2/log`
 	limite=500
 
 	if [ $cuentaLinea -gt $limite ]
 		then
 			let lineasRestar=$cuentaLinea-$limite
-			sed -i "0,${lineaRestar}/d" /home/.customgrub2/logs		
+			sed -i "0,${lineaRestar}/d" /home/.customgrub2/log		
 	fi	
 	
 		textoLog="" #Se vacía la variable
