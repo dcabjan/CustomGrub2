@@ -26,6 +26,7 @@ else
 
 	#Copia los ficheros de aplicación del instalador hasta la carpeta donde operarán
 	cp $rutaFinal/files/* /bin/.customgrub2
+	cp $rutaFinal/uninstall_customgrub2.sh /bin/.customgrub2
 
 	#Se busca en el fichero bashrc si hay un alias que pueda interferir con nuestra aplicación. De ser así, se elimina
 	sed -i "/customgrub2/d" /etc/bash.bashrc
