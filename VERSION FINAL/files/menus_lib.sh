@@ -393,7 +393,7 @@ function registroLog () {
 	zenity --text-info \
        --title="Registro de eventos" \
        --filename="/home/.customgrub2/log" \
-	--cancel-label="Atrás"
+	--cancel-label="Atrás" --height="300" --width="400"
 
 	return
 }
