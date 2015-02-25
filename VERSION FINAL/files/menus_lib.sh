@@ -539,6 +539,12 @@ then
 	perfiles
       fi
     ;;
+    
+    *)
+      zenity --warning \
+      --text="Elija una opcion valida."
+      perfiles
+    ;;
 
   esac
 fi

@@ -521,6 +521,8 @@ function perfilElegir() {
     cp -f /home/.customgrub2/profiles/$perfil/grub.cfg /boot/grub2/grub.cfg
     
     update-grub2
+    
+    anadirLog "Se ha elegido el perfil" $perfil
 }
 function perfilRestaurar() {
     #restaurar del directorio .default los siguientes archivos al directorio original
