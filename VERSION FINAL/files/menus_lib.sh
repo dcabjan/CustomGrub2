@@ -298,10 +298,12 @@ function menuConfiguracion () {
 				if [ 'x'$ventanaRecovery != 'x' ]
 				then
 				  recoveryMode
+				  codError=2
+				  mensaje $codError
 				else
 					codError=3
 					mensaje $codError
-					ventanaConfiguracion
+					menuConfiguracion
 				fi
 			#Si ha dado a cancelar vuelve al menu de configuracion
 			else
@@ -364,7 +366,6 @@ function menuConfiguracion () {
 	    ;;
 		"3.")
 			value=`grep "GRUB_TIMEOUT=" "/etc/default/grub" | cut -d "=" -f2`
-			echo $value
 			#Menu timeout
 			ventanaTimeout=`zenity --scale --text="Seleccione el tiempo de espera." --cancel-label="Atrás" --value="$value" --max-value="60" --min-value="5" --step="5"`
 			case $? in
