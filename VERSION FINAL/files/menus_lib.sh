@@ -433,31 +433,36 @@ then
       --title="Añadir un perfil nuevo" \
       --text="Escriba el nombre del perfil nuevo:"`
       #comprueba que no se ha introducido valor vacio
-      if [ $perfil != "" ]
+      if [ "$perfil" ]
       then
 	#comprueba que el usuario no existe
 	perfilesexistentes=`ls /home/.customgrub2/profiles`
-	for i in $perfilesexistentes
-	do
-	  if [ $i = $perfil ]
-	  then
-	    resultado=1
-	  else
-	    resultado=0
-	    continue
-	  fi
-	done
-	#si el usuario existe muestra error y vuelve a menu perfiles
-	if [ $resultado -eq 1 ]
-	  then
-	    mensaje 29
-	    perfiles
-	  else
-	    #si no existe se crea el perfil
-	    perfilCrear
-	    mensaje 10
-	    perfiles	    
+	if [ $perfilesexistentes ]
+	then
+	  for i in $perfilesexistentes
+	  do
+	    if [ $i = "$perfil" ]
+	    then
+	      resultado=1
+	    else
+	      resultado=0
+	      continue
+	    fi
+	  done
+	else
+	  resultado=0
 	fi
+	  #si el usuario existe muestra error y vuelve a menu perfiles
+	  if [ $resultado -eq 1 ]
+	    then
+	      mensaje 29
+	      perfiles
+	    else
+	      #si no existe se crea el perfil
+	      perfilCrear
+	      mensaje 10
+	      perfiles	    
+	  fi
 	
       else
 	# si se ha introducido valor vacio muestra error y vuelve a menu perfiles
@@ -470,26 +475,31 @@ then
     "Modificar perfil")
       #muestra perfiles existentes
       perfil=`ls /home/.customgrub2/profiles | zenity --list \
-      --column="Elige opcion de perfil" --height="300" --width="400"`
+      --column="Elige opcion de perfil" --height="300" --width="400" --cancel-label="Atras"`
       #comprueba que un perfil ha sido elegido
-      if [ $perfil ]
+      if [ "$perfil" ]
       then    
 	#llama a menu modificar
-	perfilModificar $perfil
+	perfilModificar "$perfil"
 	return
       else
 	#muestra error de perfil no elegido
-	mensaje 3
-	perfiles
+		if [ $? = 0 ]
+		then
+			mensaje 3
+			perfiles
+		else
+			perfiles
+		fi
       fi
     ;;
     
     "Eliminar perfil")
       #coge lista de directorios existentes del directorio profiles donde estan los perfiles
       opcion=`ls /home/.customgrub2/profiles | zenity --list \
-      --column="Elige opcion de perfil" --height="300" --width="400"`
+      --column="Elige opcion de perfil" --height="300" --width="400" --cancel-label="Atras"`
       #comprueba si se ha elegido opcion
-      if [ $opcion ]
+      if [ "$opcion" ]
       then    
 	#al elegir uno se solicita confirmacion
 	zenity --question \
@@ -497,7 +507,7 @@ then
 	#en caso afirmativo elimina, en caso negativo muestra error
 	if [ $? = 0 ]
 	then
-	  perfilEliminar $opcion
+	  perfilEliminar "$opcion"
 	  mensaje 12
 	  perfiles
 	else
@@ -505,8 +515,13 @@ then
 	fi
       else
 	#muestra error de no haber elegido opcion
-	mensaje 3
-	perfiles
+		if [ $? = 0 ]
+		then
+			mensaje 3
+			perfiles
+		else
+			perfiles
+		fi
       fi
     ;;  
     
@@ -528,7 +543,7 @@ then
     "Elegir perfil")
       #coge lista de directorios existentes del directorio profiles donde estan los usuarios
       opcion=`ls /home/.customgrub2/profiles | zenity --list \
-      --column="Elige opcion de perfil" --height="300" --width="400"`
+      --column="Elige opcion de perfil" --height="300" --width="400" --cancel-label="Atras"`
       #en caso afirmativo ejecuta funcion, en caso negativo vuelve a menu perfiles
       if [ $? = 0 ]
       then

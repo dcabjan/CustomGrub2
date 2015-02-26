@@ -53,9 +53,9 @@ function escribirLog() {
 #Realiza un guardado de los cambios realizados
 function guardarCambios () {
   #Copiar los archivos de GRUB a la carpeta del perfil del usuario
-  cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/$perfil
-  cp /etc/default/grub /home/.customgrub2/profiles/$perfil
-  cp /boot/grub/grub.cfg /home/.customgrub2/profiles/$perfil
+  cp /lib/plymouth/themes/default.grub /home/.customgrub2/profiles/"$perfil"
+  cp /etc/default/grub /home/.customgrub2/profiles/"$perfil"
+  cp /boot/grub/grub.cfg /home/.customgrub2/profiles/"$perfil"
   
   #Actualizar el GRUB
   update-grub2                
@@ -511,7 +511,7 @@ function perfilModificar() {
 
 function perfilEliminar() {
   #elimina directorio de perfil
-  rmdir /home/.customgrub2/profiles/$1
+  rmdir /home/.customgrub2/profiles/"$1"
 }
 function perfilCrear() {
   #crea directorio de perfil si ha sido introducido
@@ -519,19 +519,19 @@ function perfilCrear() {
 }
 function perfilElegir() {
     #restaurar del directorio del perfil los siguientes archivos al directorio original
-    cp -f /home/.customgrub2/profiles/$perfil/default.grub /lib/plymouth/themes/default.grub
-    cp -f /home/.customgrub2/profiles/$perfil/grub /etc/default/grub
-    cp -f /home/.customgrub2/profiles/$perfil/grub.cfg /boot/grub2/grub.cfg
+    cp -f /home/.customgrub2/profiles/"$perfil"/default.grub /lib/plymouth/themes/default.grub
+    cp -f /home/.customgrub2/profiles/"$perfil"/grub /etc/default/grub
+    cp -f /home/.customgrub2/profiles/"$perfil"/grub.cfg /boot/grub/grub.cfg
     
     update-grub2
     
-    anadirLog "Se ha elegido el perfil" $perfil
+    anadirLog "Se ha elegido el perfil" "$perfil"
 }
 function perfilRestaurar() {
     #restaurar del directorio .default los siguientes archivos al directorio original
     cp -f /home/.customgrub2/profiles/.default/default.grub /lib/plymouth/themes/default.grub
     cp -f /home/.customgrub2/profiles/.default/grub /etc/default/grub
-    cp -f /home/.customgrub2/profiles/.default/grub.cfg /boot/grub2/grub.cfg
+    cp -f /home/.customgrub2/profiles/.default/grub.cfg /boot/grub/grub.cfg
     
     update-grub2
   
