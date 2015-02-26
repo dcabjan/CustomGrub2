@@ -465,9 +465,9 @@ then
 	  fi
 	
       else
-	# si se ha introducido valor vacio muestra error y vuelve a menu perfiles
-	mensaje 1
-	perfiles
+		# si se ha introducido valor vacio muestra error y vuelve a menu perfiles
+		mensaje 1
+		perfiles
       fi
     ;;
     
@@ -479,11 +479,11 @@ then
       #comprueba que un perfil ha sido elegido
       if [ "$perfil" ]
       then    
-	#llama a menu modificar
-	perfilModificar "$perfil"
-	return
+		#llama a menu modificar
+		perfilModificar "$perfil"
+		return
       else
-	#muestra error de perfil no elegido
+		#muestra error de perfil no elegido
 		if [ $? = 0 ]
 		then
 			mensaje 3
@@ -501,28 +501,28 @@ then
       #comprueba si se ha elegido opcion
       if [ "$opcion" ]
       then    
-	#al elegir uno se solicita confirmacion
-	zenity --question \
-	--text="¿Está seguro de que quiere eliminar?"
-	#en caso afirmativo elimina, en caso negativo muestra error
-	if [ $? = 0 ]
-	then
-	  perfilEliminar "$opcion"
-	  mensaje 12
-	  perfiles
-	else
-	  perfiles
-	fi
-      else
-	#muestra error de no haber elegido opcion
+		#al elegir uno se solicita confirmacion
+		zenity --question \
+		--text="¿Está seguro de que quiere eliminar?"
+		#en caso afirmativo elimina, en caso negativo muestra error
 		if [ $? = 0 ]
 		then
-			mensaje 3
-			perfiles
+		  perfilEliminar "$opcion"
+		  mensaje 12
+		  perfiles
 		else
-			perfiles
+		  perfiles
 		fi
-      fi
+		  else
+				#muestra error de no haber elegido opcion
+				if [ $? = 0 ]
+				then
+					mensaje 3
+					perfiles
+				else
+					perfiles
+				fi
+    fi
     ;;  
     
     "Restaurar perfil")
@@ -532,11 +532,11 @@ then
       #en caso afirmativo se ejecuta la funcion, en caso negativo vuelve a menu perfiles
       if [ $? = 0 ]
       then
-	  perfilRestaurar
-	  mensaje 14
-	  perfiles
+		perfilRestaurar
+		mensaje 14
+		perfiles
       else
-	perfiles
+		perfiles
       fi
     ;;
     
@@ -547,12 +547,12 @@ then
       #en caso afirmativo ejecuta funcion, en caso negativo vuelve a menu perfiles
       if [ $? = 0 ]
       then
-	  perfilElegir
-	  mensaje 16
-	  perfiles
+		perfilElegir
+		mensaje 16
+		perfiles
       else
-	mensaje 3
-	perfiles
+		mensaje 3
+		perfiles
       fi
     ;;
     
